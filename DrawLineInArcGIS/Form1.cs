@@ -43,13 +43,15 @@ namespace DrawLineInArcGIS
         private void GetPntShape(string type)
         {
             DataTable valueTable = null;
+            DataTable sortTable = null;
 
             if (type == "Triangle")
             {
                 tempListPntInfo.Clear();
                 string url = "http://218.28.7.251:10525/hnqxjson/QxSqlInter/findDataSetOnDataType.hd?dataType=1-3-2&cityCode=HN";
                 string logMessage;
-                valueTable = MeteData.GetValueFromJson(url, out logMessage);
+                sortTable = MeteData.GetValueFromJson(url, out logMessage);
+                //valueTable = MeteData.GetValueFromJson(url, out logMessage);
 
                 if (!string.IsNullOrEmpty(logMessage))
                 {
@@ -63,15 +65,15 @@ namespace DrawLineInArcGIS
                 valueTable = MeteData.GetValueFromExcel(filePath);
             }
 
-            if (valueTable == null)
-            {
-                MessageBox.Show("数据读取失败！");
-                return;
-            }
+            //if (valueTable == null)
+            //{
+            //    MessageBox.Show("数据读取失败！");
+            //    return;
+            //}
 
-            DataView dataView = valueTable.DefaultView;
-            dataView.Sort = "longitude";
-            DataTable sortTable = dataView.ToTable();
+            //DataView dataView = valueTable.DefaultView;
+            //dataView.Sort = "longitude";
+            //DataTable sortTable = dataView.ToTable();
 
             try
             {
@@ -133,7 +135,7 @@ namespace DrawLineInArcGIS
                 //gridClass.GetIsobands();
                 delaumey = new Delauney(tempListPntInfo);
                 delaumey.GetDelauney();
-                delaumey.Isoline(new double[] { 9,10,11,12,14 });
+                delaumey.Isoline(new double[] { 18 });
 
 
                 TimeSpan timeSpan = DateTime.Now - timeStart;
