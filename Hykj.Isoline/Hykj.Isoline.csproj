@@ -43,6 +43,7 @@
     <Compile Include="Geom\IsoLineInfo.cs" />
     <Compile Include="Geom\IsoRing.cs" />
     <Compile Include="Geom\PointInfo.cs" />
+    <Compile Include="Geom\IsoPolygonInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

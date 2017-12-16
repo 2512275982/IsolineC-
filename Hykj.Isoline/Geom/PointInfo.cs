@@ -67,11 +67,12 @@ namespace Hykj.Isoline.Geom
         #endregion
 
         #region 公共方法
-        /*
-         * 判断另一点与当前点位置是否一致
-         */
         public bool Equals(PointInfo pntOther)
         {
+            /*
+             * 判断另一点与当前点位置是否一致
+             * 判断是否相等的精度，需要再确定小数位数
+             */
             if (Math.Abs(pntOther.X - this.X) < 0.00000001 && Math.Abs(pntOther.Y - this.Y) < 0.00000001)
             {
                 return true;
@@ -81,6 +82,27 @@ namespace Hykj.Isoline.Geom
                 return false;
             }
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         #endregion
+    }
+
+    /// <summary>
+    /// 定义点结构，为后面的线和面点列表做准备，也实现业务和基础数据的分离
+    /// 需要对上面的PointInfo类进行调整，实现业务和基础数据的分离
+    /// 作者：maxiaoling
+    /// 日期：2017.12.17
+    /// </summary>
+    public struct PointCoord
+    {
+        public double X, Y;
+        public PointCoord(double xCoord, double yCoord)
+        {
+            this.X = xCoord;
+            this.Y = yCoord;
+        }
     }
 }
