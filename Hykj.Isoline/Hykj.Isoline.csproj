@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Geom\IsoLineInfo.cs" />
+    <Compile Include="Geom\IsoRing.cs" />
     <Compile Include="Geom\PointInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
