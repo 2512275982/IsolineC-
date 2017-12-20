@@ -115,16 +115,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\01Project Manager\01气象项目\02系统开发\等值线程序\IsoLine\Hykj.MeteData\Hykj.MeteData.csproj">
-      <Project>{b57978e1-66d5-41cf-8596-069715e2b3c2}</Project>
-      <Name>Hykj.MeteData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\01Project Manager\01气象项目\02系统开发\等值线程序\IsoLine\Hykj.PubMethods\Hykj.PubMethods.csproj">
-      <Project>{670e1a5f-7231-438d-8946-a4ccf817d20c}</Project>
-      <Name>Hykj.PubMethods</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

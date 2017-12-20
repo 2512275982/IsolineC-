@@ -45,6 +45,9 @@ namespace Hykj.Isoline.Geom
         #endregion
 
         #region 构造函数，三种重载
+        public PointInfo()
+        {
+        }
         public PointInfo(double x,double y)
         {
             this.x = x;

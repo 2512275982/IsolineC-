@@ -51,6 +51,11 @@ namespace Hykj.Isoline.Geom
             this.lineValue = value;
         }
 
+        public void AddPointInfo(PointInfo pntInfo)
+        {
+            this.listVertrix.Add(pntInfo);
+        }
+
         /*
          * 给当前等值线对象添加点
          */
