@@ -730,12 +730,10 @@ namespace Hykj.Isoline.Isobands
 				PointInfo pntEnd = line.GetLineEnd();
 				
 				if(pntMFrom.Equals(pntFrom) && pntMEnd.Equals(pntEnd)){  //首尾相接
-                    //line.ListVertrix.Reverse();
                     for (int ij = line.ListVertrix.Count - 1; ij >= 0; ij--)
                     {
                         lineM.ListVertrix.Add(line.ListVertrix[ij]);
                     }
-                    //lineM.ListVertrix.AddRange(line.ListVertrix);
                     lineM.FinishState = true;
 					return true;
 				}
@@ -748,7 +746,6 @@ namespace Hykj.Isoline.Isobands
                     for(int ij = 0;ij<line.ListVertrix.Count;ij++){
                         lineM.ListVertrix.Insert(0, line.ListVertrix[ij]);
                     }
-                    //lineM.ListVertrix.AddRange(line.ListVertrix);
 					if(pntMEnd.IsEdge && pntEnd.IsEdge)
 					{
 						lineM.FinishState = true;
@@ -761,7 +758,6 @@ namespace Hykj.Isoline.Isobands
                     {
                         lineM.ListVertrix.Insert(0, line.ListVertrix[ij]);
                     }
-                    //lineM.ListVertrix.AddRange(line.ListVertrix);
 					if(pntMEnd.IsEdge && pntFrom.IsEdge)
 					{
 						lineM.FinishState = true;
