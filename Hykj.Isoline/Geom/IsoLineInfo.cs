@@ -41,6 +41,23 @@ namespace Hykj.Isoline.Geom
             set { lineValue = value; }
         }
 
+        //十六进制颜色值
+        private string lineColor;
+
+        public string LineColor
+        {
+            get { return lineColor; }
+            set { lineColor = value; }
+        }
+
+        //等值线标注信息
+        private LabelInfo label;
+        public LabelInfo Label
+        {
+            get { return label; }
+            set { label = value; }
+        }
+
         /*
          * 构造函数
          * value：初始参数，等值线的值
@@ -94,8 +111,8 @@ namespace Hykj.Isoline.Geom
     public class LabelInfo
     {
         //label位置
-        private PointInfo labelPnt;
-        public PointInfo LabelPnt
+        private PointCoord labelPnt;
+        public PointCoord LabelPnt
         {
             get { return labelPnt; }
             set { labelPnt = value; }
@@ -117,7 +134,7 @@ namespace Hykj.Isoline.Geom
         /*
          * 构造函数
          */
-        public LabelInfo(PointInfo labelPnt,double labelAngle,double value)
+        public LabelInfo(PointCoord labelPnt,double labelAngle,double value)
         {
             this.labelPnt = labelPnt;
             this.labelAngle = labelAngle;

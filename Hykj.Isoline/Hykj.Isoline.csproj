@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Geom\GridClass.cs" />
     <Compile Include="Geom\IsoLineInfo.cs" />
     <Compile Include="Geom\IsoRing.cs" />

@@ -12,7 +12,7 @@ namespace Hykj.Isoline.Geom
     /// 作者：maxiaoling
     /// 日期：2017.12.17
     /// </summary>
-    class IsoPolygonInfo
+    public  class IsoPolygonInfo
     {
         private double minValue;
         public double MinValue
@@ -41,6 +41,13 @@ namespace Hykj.Isoline.Geom
             get { return interRings; }
             set { interRings = value; }
         }
+        private string polygonColor;
+
+        public string PolygonColor
+        {
+            get { return polygonColor; }
+            set { polygonColor = value; }
+        }
 
         public IsoPolygonInfo(IsoRing outerRing)
         {
@@ -54,7 +61,7 @@ namespace Hykj.Isoline.Geom
             this.interRings = interRings;
         }
 
-        private void AddInterRing(IsoRing isoRing)
+        public void AddInterRing(IsoRing isoRing)
         {
             this.interRings.Add(isoRing);
         }

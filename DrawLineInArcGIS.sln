@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.PubMethods", "Hykj.Pub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.MeteData", "Hykj.MeteData\Hykj.MeteData.csproj", "{B57978E1-66D5-41CF-8596-069715E2B3C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.BaseMethods", "Hykj.BaseMethods\Hykj.BaseMethods.csproj", "{C789562B-263D-4B5D-8A19-F7122116E7EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B57978E1-66D5-41CF-8596-069715E2B3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B57978E1-66D5-41CF-8596-069715E2B3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B57978E1-66D5-41CF-8596-069715E2B3C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

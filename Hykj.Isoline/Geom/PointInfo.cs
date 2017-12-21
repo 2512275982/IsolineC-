@@ -15,18 +15,26 @@ namespace Hykj.Isoline.Geom
     {
         #region 字段
         //横坐标
-        private double x;
-        public double X
+        //private double x;
+        //public double X
+        //{
+        //    get { return x; }
+        //    set { x = value; }
+        //}
+        ////纵坐标
+        //private double y;
+        //public double Y
+        //{
+        //    get { return y; }
+        //    set { y = value; }
+        //}
+        //点位置
+        private PointCoord pntCoord;
+
+        public PointCoord PntCoord
         {
-            get { return x; }
-            set { x = value; }
-        }
-        //纵坐标
-        private double y;
-        public double Y
-        {
-            get { return y; }
-            set { y = value; }
+            get { return pntCoord; }
+            set { pntCoord = value; }
         }
         //Z值，不一定是高程
         private double z;
@@ -50,20 +58,17 @@ namespace Hykj.Isoline.Geom
         }
         public PointInfo(double x,double y)
         {
-            this.x = x;
-            this.y = y;
+            pntCoord = new PointCoord(x, y);
         }
 
         public PointInfo(double x, double y, double z)
         {
-            this.x = x;
-            this.y = y;
+            pntCoord = new PointCoord(x, y);
             this.z = z;
         }
         public PointInfo(double x, double y, double z, bool edgeFlag)
         {
-            this.x = x;
-            this.y = y;
+            pntCoord = new PointCoord(x, y);
             this.z = z;
             this.isEdge = edgeFlag;
         }
@@ -76,7 +81,7 @@ namespace Hykj.Isoline.Geom
              * 判断另一点与当前点位置是否一致
              * 判断是否相等的精度，需要再确定小数位数
              */
-            if (Math.Abs(pntOther.X - this.X) < 0.00000001 && Math.Abs(pntOther.Y - this.Y) < 0.00000001)
+            if (Math.Abs(pntOther.PntCoord.X - this.PntCoord.X) < 0.0000000001 && Math.Abs(pntOther.PntCoord.Y - this.PntCoord.Y) < 0.0000000001)
             {
                 return true;
             }

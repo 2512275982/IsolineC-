@@ -43,8 +43,8 @@ namespace Hykj.Isoline.Geom
         //无必须存在的必要，但为了适应现有代码编写，后期需统一处理
         public bool JudgePntInRing(PointInfo pntInfo)
         {
-            double x = pntInfo.X;
-            double y = pntInfo.Y;
+            double x = pntInfo.PntCoord.X;
+            double y = pntInfo.PntCoord.Y;
             return CalPntInRing(x, y);
         }
         /// <summary>
@@ -123,6 +123,15 @@ namespace Hykj.Isoline.Geom
             get { return this.value; }
             set { this.value = value; }
         }
+        private bool valueFlag = false;
+
+        public bool ValueFlag
+        {
+            get { return valueFlag; }
+            //set { valueFlag = value; }
+        }
+
+
         private double parentValue;
 
         public double ParentValue  //父等值线值，可能为空
@@ -136,6 +145,21 @@ namespace Hykj.Isoline.Geom
         public bool ParentFlag
         {
             get { return parentFlag; }
+        }
+
+        public IsoRingInfo(string id, IsoRing isoRing, double value)
+        {
+            this.isoRing = isoRing;
+            this.id = id;
+            this.value = value;
+            this.valueFlag = true;
+        }
+
+        public IsoRingInfo(string id, IsoRing isoRing)
+        {
+            this.isoRing = isoRing;
+            this.id = id;
+            this.valueFlag = false;
         }
 
         //设置父等值线值

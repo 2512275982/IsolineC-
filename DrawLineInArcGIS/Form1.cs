@@ -19,14 +19,15 @@ using Hykj.PubMethods;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.ADF.Connection.Local;
 using ESRI.ArcGIS.ADF;
+using Hykj.Isoline.Geom;
 
 namespace DrawLineInArcGIS
 {
     public partial class Form1 : Form
     {
-        private List<PointInfo> tempListPntInfo = new List<PointInfo>();
+        private List<Hykj.PubMethods.PointInfo> tempListPntInfo = new List<Hykj.PubMethods.PointInfo>();
         private Delauney delaumey;
-        private GridClass gridClass;
+        //private GridClass gridClass;
 
         public Form1()
         {
@@ -125,7 +126,7 @@ namespace DrawLineInArcGIS
                         }
                     }
 
-                    PointInfo pntInfo = new PointInfo(x, y, eValue);
+                    Hykj.PubMethods.PointInfo pntInfo = new Hykj.PubMethods.PointInfo(x, y, eValue);
                     tempListPntInfo.Add(pntInfo);
                 }
                 DateTime timeStart = DateTime.Now;
@@ -237,7 +238,7 @@ namespace DrawLineInArcGIS
 
                 IFeatureCursor insertCursor = pntClass.Insert(true);
                 comReleaser.ManageLifetime(insertCursor);
-                foreach (PointInfo pntInfo in tempListPntInfo)
+                foreach (Hykj.PubMethods.PointInfo pntInfo in tempListPntInfo)
                 {
                     IPoint pnt = new PointClass();
                     pnt.X = pntInfo.X;
@@ -376,6 +377,168 @@ namespace DrawLineInArcGIS
         private void button3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            IMap map = this.axMapControl1.Map;
+            ILayer lineLayer = map.get_Layer(1);
+            IFeatureLayer featLineLayer = lineLayer as IFeatureLayer;
+            IFeatureClass featLineClass = featLineLayer.FeatureClass;
+
+            ILayer pntLayer = map.get_Layer(0);
+            IFeatureLayer pntFeatLayer = pntLayer as IFeatureLayer;
+            IFeatureClass pntClass = pntFeatLayer.FeatureClass;
+
+            IFeatureDataset featDataset = pntClass.FeatureDataset;
+            IWorkspace workspace = featDataset.Workspace;
+            IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+
+            List<IsoLineInfo> listLines = TestIsoline.ReadJsonFile();
+
+            workspaceEdit.StartEditing(false);
+            workspaceEdit.StartEditOperation();
+
+            int sunCount = 0;
+
+            using (ComReleaser comReleaser = new ComReleaser())
+            {
+                int index = pntClass.FindField("Value");
+                IFeatureBuffer featBuffer = pntClass.CreateFeatureBuffer();
+                comReleaser.ManageLifetime(featBuffer);
+
+                int indexLine = featLineClass.FindField("Value");
+                IFeatureBuffer lineBuffer = featLineClass.CreateFeatureBuffer();
+                comReleaser.ManageLifetime(lineBuffer);
+
+                IFeatureCursor lineCursor = featLineClass.Insert(true);
+                comReleaser.ManageLifetime(lineCursor);
+
+                IFeatureCursor insertCursor = pntClass.Insert(true);
+                comReleaser.ManageLifetime(insertCursor);
+                for (int i = 0; i < listLines.Count; i++)
+                {
+                    IsoLineInfo lines = listLines[i];
+
+                    IPointCollection pntColl = new PolylineClass();
+                    for (int j = 0; j < lines.ListVertrix.Count; j++)
+                    {
+                        IPoint pnt = new PointClass();
+                        pnt.X = lines.ListVertrix[j].PntCoord.X;
+                        pnt.Y = lines.ListVertrix[j].PntCoord.Y;
+
+                        pntColl.AddPoint(pnt);
+                    }
+
+                    IPolyline line = pntColl as IPolyline;
+
+                    lineBuffer.Shape = line;
+                    lineBuffer.set_Value(indexLine, lines.LineValue);
+                    lineCursor.InsertFeature(lineBuffer);
+
+                    if (!lines.FinishState)
+                    {
+                        Hykj.Isoline.Geom.PointInfo pntFrom = lines.GetLineFrom();
+                        Hykj.Isoline.Geom.PointInfo pntEnd = lines.GetLineEnd();
+
+                        IPoint pntF = new PointClass();
+                        pntF.X = pntFrom.PntCoord.X;
+                        pntF.Y = pntFrom.PntCoord.Y;
+
+                        featBuffer.Shape = pntF;
+                        featBuffer.set_Value(index, pntFrom.Z);
+                        insertCursor.InsertFeature(featBuffer);
+
+                        IPoint pntE = new PointClass();
+                        pntE.X = pntEnd.PntCoord.X;
+                        pntE.Y = pntEnd.PntCoord.Y;
+
+                        featBuffer.Shape = pntE;
+                        featBuffer.set_Value(index, pntEnd.Z);
+                        insertCursor.InsertFeature(featBuffer);
+
+                        sunCount++;
+                    }
+                }
+                insertCursor.Flush();
+                lineCursor.Flush();
+            }
+
+            workspaceEdit.StopEditOperation();
+            workspaceEdit.StopEditing(true);
+            //return sunCount;
+            MessageBox.Show(sunCount.ToString());
+        }
+
+        private void EditMapPoint()
+        {
+            IMap map = this.axMapControl1.Map;
+            ILayer lineLayer = map.get_Layer(1);
+            IFeatureLayer featLineLayer = lineLayer as IFeatureLayer;
+            IFeatureClass featLineClass = featLineLayer.FeatureClass;
+
+            ILayer pntLayer = map.get_Layer(0);
+            IFeatureLayer pntFeatLayer = pntLayer as IFeatureLayer;
+            IFeatureClass pntClass = pntFeatLayer.FeatureClass;
+
+            IFeatureDataset featDataset = pntClass.FeatureDataset;
+            IWorkspace workspace = featDataset.Workspace;
+            IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+            workspaceEdit.StartEditing(false);
+            workspaceEdit.StartEditOperation();
+
+            using (ComReleaser comReleaser = new ComReleaser())
+            {
+                int index = pntClass.FindField("Value");
+                IFeatureBuffer featBuffer = pntClass.CreateFeatureBuffer();
+                comReleaser.ManageLifetime(featBuffer);
+
+                IFeatureCursor insertCursor = pntClass.Insert(true);
+                comReleaser.ManageLifetime(insertCursor);
+                foreach (Hykj.PubMethods.PointInfo pntInfo in tempListPntInfo)
+                {
+                    IPoint pnt = new PointClass();
+                    pnt.X = pntInfo.X;
+                    pnt.Y = pntInfo.Y;
+
+                    featBuffer.Shape = pnt;
+                    featBuffer.set_Value(index, pntInfo.EValue);
+                    insertCursor.InsertFeature(featBuffer);
+                }
+                insertCursor.Flush();
+            }
+
+            using (ComReleaser comReleaser = new ComReleaser())
+            {
+                int index = featLineClass.FindField("Value");
+                IFeatureBuffer featBuffer = featLineClass.CreateFeatureBuffer();
+                comReleaser.ManageLifetime(featBuffer);
+
+                IFeatureCursor insertCursor = featLineClass.Insert(true);
+                comReleaser.ManageLifetime(insertCursor);
+                foreach (IsolineClass isoLine in delaumey.ListIsoLines)
+                {
+                    IPointCollection pntColl = new PolylineClass();
+                    for (int i = 0; i < isoLine.pntList.Length; i++)
+                    {
+                        IPoint pnt = new PointClass();
+                        pnt.X = isoLine.pntList[i].X;
+                        pnt.Y = isoLine.pntList[i].Y;
+
+                        pntColl.AddPoint(pnt);
+                    }
+
+                    IPolyline line = pntColl as IPolyline;
+
+                    featBuffer.Shape = line;
+                    featBuffer.set_Value(index, isoLine.IsolineValue);
+                    insertCursor.InsertFeature(featBuffer);
+                }
+                insertCursor.Flush();
+            }
+
+            workspaceEdit.StopEditOperation();
+            workspaceEdit.StopEditing(true);
         }
     }
 }
