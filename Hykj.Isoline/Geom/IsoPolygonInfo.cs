@@ -6,7 +6,7 @@ using System.Text;
 namespace Hykj.Isoline.Geom
 {
     /// <summary>
-    /// 多边形，支持multiPolygon，由IsoRing组成
+    /// 多边形，支持环多边形，由IsoRing组成
     /// outerRings:外围多边形IsoRing一个（暂时未想到必须多个的情况）
     /// interRings:内部镂空多边形IsoRing数组，可由一个或多个组成
     /// 作者：maxiaoling
@@ -14,14 +14,15 @@ namespace Hykj.Isoline.Geom
     /// </summary>
     public  class IsoPolygonInfo
     {
-        private double minValue;
+        #region 属性
+        private double minValue;  //外环等值线的值为小的情况下，使用等值线上一区间色渲染
         public double MinValue
         {
             get { return minValue; }
             set { minValue = value; }
         }
 
-        private double maxValue;
+        private double maxValue;  //外环等值线为大值的情况下，使用等值线下一区间色渲染
         public double MaxValue
         {
             get { return maxValue; }
@@ -48,22 +49,24 @@ namespace Hykj.Isoline.Geom
             get { return polygonColor; }
             set { polygonColor = value; }
         }
+        #endregion
 
+        #region 构造函数
         public IsoPolygonInfo(IsoRing outerRing)
         {
             this.outerRing = outerRing;
             this.interRings = new List<IsoRing>();
         }
+        #endregion
 
-        public IsoPolygonInfo(IsoRing outerRing, List<IsoRing> interRings)
-        {
-            this.outerRing = outerRing;
-            this.interRings = interRings;
-        }
-
+        #region 公共方法
+        /*
+         * 添加内环多边形
+         */
         public void AddInterRing(IsoRing isoRing)
         {
             this.interRings.Add(isoRing);
         }
+        #endregion
     }
 }

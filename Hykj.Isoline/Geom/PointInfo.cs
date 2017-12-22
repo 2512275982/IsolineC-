@@ -7,6 +7,7 @@ namespace Hykj.Isoline.Geom
 {
     /// <summary>
     /// 定义点类，并定义一个公共函数，用于判断点位置是否一致，判断精度需要再考虑
+    /// 该点类应该是插值点类，不能代表所有的点
     /// 从JavaScript代码移植过来
     /// 作者：maxiaoling
     /// 日期：2017.12.15
@@ -14,20 +15,6 @@ namespace Hykj.Isoline.Geom
     public class PointInfo
     {
         #region 字段
-        //横坐标
-        //private double x;
-        //public double X
-        //{
-        //    get { return x; }
-        //    set { x = value; }
-        //}
-        ////纵坐标
-        //private double y;
-        //public double Y
-        //{
-        //    get { return y; }
-        //    set { y = value; }
-        //}
         //点位置
         private PointCoord pntCoord;
 
@@ -75,13 +62,14 @@ namespace Hykj.Isoline.Geom
         #endregion
 
         #region 公共方法
+        /*
+         * 判断另一点与当前点位置是否一致，目前认为只有插值点有这样的判断需求
+         * 经过测试，插值点是完全一致的，可以用等于0进行判断
+         * 判断是否相等的精度，需要再确定小数位数
+         */
         public bool Equals(PointInfo pntOther)
         {
-            /*
-             * 判断另一点与当前点位置是否一致
-             * 判断是否相等的精度，需要再确定小数位数
-             */
-            if (Math.Abs(pntOther.PntCoord.X - this.PntCoord.X) < 0.0000000001 && Math.Abs(pntOther.PntCoord.Y - this.PntCoord.Y) < 0.0000000001)
+            if (Math.Abs(pntOther.PntCoord.X - this.PntCoord.X) < 0.000000000001 && Math.Abs(pntOther.PntCoord.Y - this.PntCoord.Y) < 0.000000000001)
             {
                 return true;
             }

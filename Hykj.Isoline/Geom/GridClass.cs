@@ -18,30 +18,38 @@ namespace Hykj.Isoline.Geom
         private int extendGridNum = 2;
         private PointInfo[,] pntGrid;  //对应
 
-        private double xmin;
-        public double Xmin
+        private GridCoord superGridCoord;
+
+        public GridCoord SuperGridCoord
         {
-            get { return xmin; }
-            set { xmin = value; }
+            get { return superGridCoord; }
+            set { superGridCoord = value; }
         }
-        private double ymin;
-        public double Ymin
-        {
-            get { return ymin; }
-            set { ymin = value; }
-        }
-        private double xmax;
-        public double Xmax
-        {
-            get { return xmax; }
-            set { xmax = value; }
-        }
-        private double ymax;
-        public double Ymax
-        {
-            get { return ymax; }
-            set { ymax = value; }
-        }
+
+        //private double xmin;
+        //public double Xmin
+        //{
+        //    get { return xmin; }
+        //    set { xmin = value; }
+        //}
+        //private double ymin;
+        //public double Ymin
+        //{
+        //    get { return ymin; }
+        //    set { ymin = value; }
+        //}
+        //private double xmax;
+        //public double Xmax
+        //{
+        //    get { return xmax; }
+        //    set { xmax = value; }
+        //}
+        //private double ymax;
+        //public double Ymax
+        //{
+        //    get { return ymax; }
+        //    set { ymax = value; }
+        //}
         public GridClass(List<PointInfo> listPntInfo)
         {
             this.listOriginPnts = listPntInfo;
@@ -54,10 +62,10 @@ namespace Hykj.Isoline.Geom
 
         private void GetSuperGrid()
         {
-            ymax = -1;
-            ymin = -1;
-            xmax = -1;
-            xmin = -1;
+            double ymax = -1,
+                   ymin = -1,
+                   xmax = -1,
+                   xmin = -1;
             if (listOriginPnts.Count > 0)
             {
                 ymin = ymax = listOriginPnts[0].PntCoord.Y;
@@ -83,12 +91,33 @@ namespace Hykj.Isoline.Geom
                     xmax = tempPnt.PntCoord.X;
                 }
             }
+
+            double dx = xmax - xmin;
+            double dy = ymax - ymin;
+
+            double step = 0;
+            if (dx > dy)
+            {
+                step = 1.0 * dx / (gridStep - 1);
+            }
+            else
+            {
+                step = 1.0 * dy / (gridStep - 1);
+            }
+
+            xmin = xmin - extendGridNum * step;
+            ymin = ymin - extendGridNum * step;
+
+            dx = dx + extendGridNum * step * 2;
+            dy = dy + extendGridNum * step * 2;
+
+            xmax = xmin + dx;
+            ymax = ymin + dy - (dy % step);
         }
 
         public PointInfo[,] GetGrid()
         {
             GetSuperGrid();
-            //List<PointInfo> listGridPnts = new List<PointInfo>();  //pntGrid
             
             double dx = xmax - xmin;
             double dy = ymax - ymin;
@@ -119,7 +148,6 @@ namespace Hykj.Isoline.Geom
 
             for (int i = 0; i < iMaxValue; i++)
             {
-                //var gridArray = new Array();
                 double x = xmin + i * step;
                 for (int j = 0; j < jMaxValue; j++)
                 {
@@ -127,12 +155,8 @@ namespace Hykj.Isoline.Geom
                     double value = GetGridPntValue(x, y);
                     PointInfo pnt = new PointInfo(x, y, value);
                     pntGrid[i,j] = pnt;
-                    //listGridPnts.Add(pnt);
-                    //gridArray.push(pnt);
                 }
-                //pntGrid.push(gridArray);
             }
-            //return pntGrid;
             return pntGrid;
         }
 
