@@ -4,10 +4,24 @@ using System.Collections.Generic;
 
 namespace Hykj.Isoline.Isobands
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GridIsoline
     {
         private List<IsoLineInfo> tempIsolines = new List<IsoLineInfo>();
         private List<IsoLineInfo> listIsolines = new List<IsoLineInfo>();
+
+        public List<IsoLineInfo> ListIsolines
+        {
+            get { return listIsolines; }
+        }
+        private List<IsoPolygonInfo> isoBands;
+
+        public List<IsoPolygonInfo> IsoBands
+        {
+            get { return isoBands; }
+        }
         private PointInfo[,] pntGrid;
 
         public GridIsoline(PointInfo[,] gridPnts)
@@ -37,7 +51,7 @@ namespace Hykj.Isoline.Isobands
 
         public List<IsoPolygonInfo> WikiIsolineBand(List<IsoLineInfo> isolines,double yMax,double yMin,double xMax,double xMin){
             List<IsoRingInfo> rings = GetIsoRings(isolines,yMax,yMin,xMax,xMin);
-			List<IsoPolygonInfo> isoBands = GetIsoBands(rings);
+			isoBands = GetIsoBands(rings);
 			return isoBands;
         }
 
@@ -456,9 +470,6 @@ namespace Hykj.Isoline.Isobands
 			} else if(zValue >= lineValue) {
 				type = 1;
 			} 
-//			else if(zValue > lineValue) {
-//				type = 2;
-//			}
 			return type;
 		}
 

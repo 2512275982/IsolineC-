@@ -125,14 +125,6 @@
       <Project>{2e2fc908-efa1-4e48-b66b-463d9187a054}</Project>
       <Name>Hykj.Isoline</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hykj.MeteData\Hykj.MeteData.csproj">
-      <Project>{b57978e1-66d5-41cf-8596-069715e2b3c2}</Project>
-      <Name>Hykj.MeteData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hykj.PubMethods\Hykj.PubMethods.csproj">
-      <Project>{670e1a5f-7231-438d-8946-a4ccf817d20c}</Project>
-      <Name>Hykj.PubMethods</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
