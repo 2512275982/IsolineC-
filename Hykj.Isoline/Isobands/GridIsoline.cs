@@ -49,8 +49,8 @@ namespace Hykj.Isoline.Isobands
             return listIsolines;
         }
 
-        public List<IsoPolygonInfo> WikiIsolineBand(List<IsoLineInfo> isolines,double yMax,double yMin,double xMax,double xMin){
-            List<IsoRingInfo> rings = GetIsoRings(isolines,yMax,yMin,xMax,xMin);
+        public List<IsoPolygonInfo> WikiIsolineBand(List<IsoLineInfo> isolines,GridCoord superGrid){
+            List<IsoRingInfo> rings = GetIsoRings(isolines, superGrid);
 			isoBands = GetIsoBands(rings);
 			return isoBands;
         }
@@ -64,7 +64,7 @@ namespace Hykj.Isoline.Isobands
 		 * 返回值：listIsoRings，排序后的IsoRingInfo列表
 		 * edit by maxiaoling at 2017.12.14
 		 */
-        private List<IsoRingInfo> GetIsoRings(List<IsoLineInfo> isolines,double yMax,double yMin,double xMax,double xMin)
+        private List<IsoRingInfo> GetIsoRings(List<IsoLineInfo> isolines,GridCoord superGrid)
         {
             List<IsoRingInfo> listClass1 = new List<IsoRingInfo>();
 			List<IsoRingInfo> listClass2 = new List<IsoRingInfo>();
@@ -77,6 +77,11 @@ namespace Hykj.Isoline.Isobands
 			List<IsoRingInfo> listClass9 = new List<IsoRingInfo>();
 			List<IsoRingInfo> listClass10 = new List<IsoRingInfo>();
 			List<IsoRingInfo> listClass11 = new List<IsoRingInfo>();
+
+            double yMax = superGrid.yMax;
+            double yMin = superGrid.yMin;
+            double xMax = superGrid.xMax;
+            double xMin = superGrid.xMin;
 			
 			IsoRing isoRing = null;
             IsoRingInfo isoRingInfo = null;
@@ -718,7 +723,6 @@ namespace Hykj.Isoline.Isobands
 					continue;
 				if(MergeLine(i)){
                     tempIsolines.RemoveAt(i);
-                    //tempIsolines.splice(i,1);
 					i = -1;
 				}
 			}

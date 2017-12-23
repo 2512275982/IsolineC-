@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Hykj.Isoline.Geom
 {
@@ -26,40 +24,28 @@ namespace Hykj.Isoline.Geom
             set { superGridCoord = value; }
         }
 
-        //private double xmin;
-        //public double Xmin
-        //{
-        //    get { return xmin; }
-        //    set { xmin = value; }
-        //}
-        //private double ymin;
-        //public double Ymin
-        //{
-        //    get { return ymin; }
-        //    set { ymin = value; }
-        //}
-        //private double xmax;
-        //public double Xmax
-        //{
-        //    get { return xmax; }
-        //    set { xmax = value; }
-        //}
-        //private double ymax;
-        //public double Ymax
-        //{
-        //    get { return ymax; }
-        //    set { ymax = value; }
-        //}
+        /*
+         * 构造函数，传入一个点列表
+         */
         public GridClass(List<PointInfo> listPntInfo)
         {
             this.listOriginPnts = listPntInfo;
+            GetSuperGrid();
         }
 
+        /*
+         * 构造函数，传入一个点列表和一个所求插值矩形范围
+         */
         public GridClass(List<PointInfo> listPntInfo, GridCoord gridCoord)
         {
             this.listOriginPnts = listPntInfo;
+            this.superGridCoord = gridCoord;
         }
 
+        /// <summary>
+        /// 取得当前数据的最外接矩形
+        /// 需要注意的是，该外接矩形不是最终的外接矩形，会对该矩形进行外围扩展
+        /// </summary>
         private void GetSuperGrid()
         {
             double ymax = -1,
@@ -91,36 +77,13 @@ namespace Hykj.Isoline.Geom
                     xmax = tempPnt.PntCoord.X;
                 }
             }
-
-            double dx = xmax - xmin;
-            double dy = ymax - ymin;
-
-            double step = 0;
-            if (dx > dy)
-            {
-                step = 1.0 * dx / (gridStep - 1);
-            }
-            else
-            {
-                step = 1.0 * dy / (gridStep - 1);
-            }
-
-            xmin = xmin - extendGridNum * step;
-            ymin = ymin - extendGridNum * step;
-
-            dx = dx + extendGridNum * step * 2;
-            dy = dy + extendGridNum * step * 2;
-
-            xmax = xmin + dx;
-            ymax = ymin + dy - (dy % step);
+            this.superGridCoord = new GridCoord(xmin, xmax, ymin, ymax);
         }
 
         public PointInfo[,] GetGrid()
         {
-            GetSuperGrid();
-            
-            double dx = xmax - xmin;
-            double dy = ymax - ymin;
+            double dx = this.superGridCoord.xMax - this.superGridCoord.xMin;
+            double dy = this.superGridCoord.yMax - this.superGridCoord.yMin;
 
             double step = 0;
             if (dx > dy)
@@ -132,14 +95,14 @@ namespace Hykj.Isoline.Geom
                 step = 1.0 * dy / (gridStep - 1);
             }
 
-            xmin = xmin - extendGridNum * step;
-            ymin = ymin - extendGridNum * step;
+            this.superGridCoord.xMin = this.superGridCoord.xMin - extendGridNum * step;
+            this.superGridCoord.yMin = this.superGridCoord.yMin - extendGridNum * step;
 
             dx = dx + extendGridNum * step * 2;
             dy = dy + extendGridNum * step * 2;
 
-            xmax = xmin + dx;
-            ymax = ymin + dy - (dy % step);
+            this.superGridCoord.xMax = this.superGridCoord.xMin + dx;
+            this.superGridCoord.yMax = this.superGridCoord.yMin + dy - (dy % step);
 
             int iMaxValue = (int)(dx / step + 1);
             int jMaxValue = (int)(dy / step + 1);
@@ -148,10 +111,10 @@ namespace Hykj.Isoline.Geom
 
             for (int i = 0; i < iMaxValue; i++)
             {
-                double x = xmin + i * step;
+                double x = this.superGridCoord.xMin + i * step;
                 for (int j = 0; j < jMaxValue; j++)
                 {
-                    double y = ymin + j * step;
+                    double y = this.superGridCoord.yMin + j * step;
                     double value = GetGridPntValue(x, y);
                     PointInfo pnt = new PointInfo(x, y, value);
                     pntGrid[i,j] = pnt;
@@ -179,6 +142,9 @@ namespace Hykj.Isoline.Geom
 		}
     }
 
+    /// <summary>
+    /// 网格结构体
+    /// </summary>
     public struct GridCoord{
         public double xMin;
         public double yMin;
