@@ -88,8 +88,8 @@ namespace Hykj.Isoline.Isobands
 			    IsoLineInfo line = isolines[i];
 				needAdd = true;
 				if(line.LineType){  //开放型
-					PointInfo pntFrom = line.GetLineFrom();
-					PointInfo pntEnd = line.GetLineEnd();
+					PointInfo pntFrom = line.FromPoint;//.GetLineFrom();
+					PointInfo pntEnd = line.ToPoint;//.GetLineEnd();
 					string type1 = string.Empty,type2 = string.Empty;
 
                     if (Math.Abs(pntFrom.PntCoord.X - xMin) < 0.0000001)
@@ -130,7 +130,7 @@ namespace Hykj.Isoline.Isobands
 					switch(type){
 						case "33":   //第2类
 							ringId = "02" + listClass2.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 							
 							//以线的起始点判断是否包含关系，替换为以下判断是否包含的方法，更好理解
@@ -148,7 +148,7 @@ namespace Hykj.Isoline.Isobands
 							break;
 						case "11":  //第3类
 							ringId = "03" + listClass3.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 							
 							for(j = 0;j<listClass3.Count;j++){
@@ -165,7 +165,7 @@ namespace Hykj.Isoline.Isobands
 							break;
 						case "44": //第4类
 							ringId = "04" + listClass4.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 						
 							for(j = 0;j<listClass4.Count;j++){
@@ -182,7 +182,7 @@ namespace Hykj.Isoline.Isobands
 							break;
 						case "22":  //第5类
 							ringId = "05" + listClass5.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 						
 							for(j = 0;j<listClass5.Count;j++){
@@ -200,7 +200,7 @@ namespace Hykj.Isoline.Isobands
 						case "12":  //第6类
 						case "21":
 							ringId = "06" + listClass6.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRing.PushPoint(new PointCoord(xMin,yMax));  //第6类需要加上一个角点（左上角）
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 							
@@ -219,7 +219,7 @@ namespace Hykj.Isoline.Isobands
 						case "14":  //第7类
 						case "41":
 							ringId = "07" + listClass7.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRing.PushPoint(new PointCoord(xMin,yMin));   //第7类需要加上一个角点（左下角）
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 							
@@ -238,7 +238,7 @@ namespace Hykj.Isoline.Isobands
 						case "34":  //第8类
 						case "43":
 							ringId = "08" + listClass8.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRing.PushPoint(new PointCoord(xMax,yMin));   //第8类需要加上一个角点（右下角）
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 							
@@ -257,7 +257,7 @@ namespace Hykj.Isoline.Isobands
 						case "23":   //第9类
 						case "32":
 							ringId = "09" + listClass9.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+							isoRing = new IsoRing(line.ListVertrix);
 							isoRing.PushPoint(new PointCoord(xMax,yMax));   //第9类需要加上一个角点（右上角）
 							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 							
@@ -276,9 +276,9 @@ namespace Hykj.Isoline.Isobands
 						case "13":  //第10类
 						case "31":
 							ringId = "10" + listClass10.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
-                            if (Math.Abs(line.GetLineEnd().PntCoord.Y - xMin) < 0.000001)
-                            {  //第10类，差两个点，需要考虑添加的顺序 GetLineEnd()
+							isoRing = new IsoRing(line.ListVertrix);
+                            if (Math.Abs(line.ToPoint.PntCoord.Y - xMin) < 0.000001)
+                            {  //第10类，差两个点，需要考虑添加的顺序
 								isoRing.PushPoint(new PointCoord(xMin,yMin));
 								isoRing.PushPoint(new PointCoord(xMax,yMin));
 							}
@@ -303,8 +303,8 @@ namespace Hykj.Isoline.Isobands
 						case "24":  //第11类
 						case "42":
 							ringId = "11" + listClass11.Count.ToString();
-							isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
-                            if (Math.Abs(line.GetLineEnd().PntCoord.Y - yMin) < 0.000001)
+							isoRing = new IsoRing(line.ListVertrix);
+                            if (Math.Abs(line.ToPoint.PntCoord.Y - yMin) < 0.000001)
                             {  //第11类，差两个点，需要考虑添加的顺序   GetLineEnd()
 								isoRing.PushPoint(new PointCoord(xMin,yMin));
 								isoRing.PushPoint(new PointCoord(xMin,yMax));
@@ -331,7 +331,7 @@ namespace Hykj.Isoline.Isobands
 				}
 				else{   //闭合型，反向遍历，第1类
 					ringId = "01" + listClass1.Count.ToString();
-					isoRing = new IsoRing(TransPntArrayToCoors(line.ListVertrix));
+					isoRing = new IsoRing(line.ListVertrix);
 					isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
 					
 					for(int j = 0; j<listClass1.Count; j++){
@@ -480,10 +480,10 @@ namespace Hykj.Isoline.Isobands
 		private void UpdateIsolines(PointInfo lineFromPnt,PointInfo lineToPnt,double value){
 			//当两个点都是边界点时，该等值线由这两个点组成
 			if(lineFromPnt.IsEdge && lineToPnt.IsEdge){
-				IsoLineInfo isoline = new IsoLineInfo(value);  
-				isoline.AddPointInfo(lineFromPnt);
-				isoline.AddPointInfo(lineToPnt);
-				isoline.LineType = true;  //开放型等值线
+				IsoLineInfo isoline = new IsoLineInfo(value);
+				isoline.AddStartPoint(lineFromPnt);
+				isoline.AddEndPoint(lineToPnt);
+                //isoline.LineType = true;  //开放型等值线
 				isoline.FinishState = true;  
 				tempIsolines.Add(isoline);
 			}
@@ -495,32 +495,32 @@ namespace Hykj.Isoline.Isobands
 						if(isoline.FinishState)  //如果等值线追踪完成
 							continue;
 						matchFlag = false;
-						PointInfo pntStart = isoline.GetLineFrom();
-						PointInfo pntEnd = isoline.GetLineEnd();
+						PointInfo pntStart = isoline.FromPoint; //.GetLineFrom();
+						PointInfo pntEnd = isoline.ToPoint; //.GetLineEnd();
 						if(pntStart.IsEdge){
 							if(lineFromPnt.IsEdge){
 								matchFlag = pntEnd.Equals(lineToPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineFromPnt);
+									isoline.AddEndPoint(lineFromPnt);
 									isoline.FinishState = true;
 								}
 							}
 							else if(lineToPnt.IsEdge){
 								matchFlag = pntEnd.Equals(lineFromPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineToPnt);
+									isoline.AddEndPoint(lineToPnt);
 									isoline.FinishState = true;
 								}
 							}
 							else{
 								matchFlag = pntEnd.Equals(lineToPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineFromPnt);
+									isoline.AddEndPoint(lineFromPnt);
 								}
 								else{
 									matchFlag = pntEnd.Equals(lineFromPnt);
 									if(matchFlag){
-										isoline.AddPointInfo(lineToPnt);
+										isoline.AddEndPoint(lineToPnt);
 									}
 								}
 							}
@@ -529,28 +529,28 @@ namespace Hykj.Isoline.Isobands
 							if(lineFromPnt.IsEdge){
 								matchFlag = pntStart.Equals(lineToPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineToPnt,0);
-									isoline.AddPointInfo(lineFromPnt,0);
+									isoline.AddStartPoint(lineToPnt);
+                                    isoline.AddStartPoint(lineFromPnt);
 									isoline.FinishState = true;
 								}
 							}
 							else if(lineToPnt.IsEdge){
 								matchFlag = pntStart.Equals(lineFromPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineFromPnt,0);
-									isoline.AddPointInfo(lineToPnt,0);
+                                    isoline.AddStartPoint(lineFromPnt);
+                                    isoline.AddStartPoint(lineToPnt);
 									isoline.FinishState = true;
 								}
 							}
 							else{
 								matchFlag = pntStart.Equals(lineToPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineFromPnt,0);
+                                    isoline.AddStartPoint(lineFromPnt);
 								}
 								else{
 									matchFlag = pntStart.Equals(lineFromPnt);
 									if(matchFlag){
-										isoline.AddPointInfo(lineToPnt,0);
+                                        isoline.AddStartPoint(lineToPnt);
 									}
 								}
 							}
@@ -559,52 +559,52 @@ namespace Hykj.Isoline.Isobands
 							if(lineFromPnt.IsEdge){
 								matchFlag = pntStart.Equals(lineToPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineFromPnt,0);
-									isoline.LineType = true;
+                                    isoline.AddStartPoint(lineFromPnt);
+                                    //isoline.LineType = true;
 								}
 								else{
 									matchFlag = pntEnd.Equals(lineToPnt);
 									if(matchFlag){
-										isoline.AddPointInfo(lineFromPnt);
-										isoline.LineType = true;
+										isoline.AddEndPoint(lineFromPnt);
+                                        //isoline.LineType = true;
 									}
 								}
 							}
 							else if(lineToPnt.IsEdge){
 								matchFlag = pntStart.Equals(lineFromPnt);
 								if(matchFlag){
-									isoline.AddPointInfo(lineToPnt,0);
-									isoline.LineType = true;
+                                    isoline.AddStartPoint(lineToPnt);
+                                    //isoline.LineType = true;
 								}
 								else{
 									matchFlag = pntEnd.Equals(lineFromPnt);
 									if(matchFlag){
-										isoline.AddPointInfo(lineToPnt);
-										isoline.LineType = true;
+										isoline.AddEndPoint(lineToPnt);
+                                        //isoline.LineType = true;
 									}
 								}
 							}
 							else{
 								matchFlag = true;
 								if(pntStart.Equals(lineFromPnt)&&pntEnd.Equals(lineToPnt)){
-									isoline.AddPointInfo(lineFromPnt);
+									isoline.AddEndPoint(lineFromPnt);
 									isoline.FinishState = true;
 								}
 								else if(pntStart.Equals(lineToPnt)&&pntEnd.Equals(lineFromPnt)){
-									isoline.AddPointInfo(lineToPnt);
+									isoline.AddEndPoint(lineToPnt);
 									isoline.FinishState = true;
 								}
 								else if(pntStart.Equals(lineFromPnt)){
-									isoline.AddPointInfo(lineToPnt,0);
+                                    isoline.AddStartPoint(lineToPnt);
 								}
 								else if(pntStart.Equals(lineToPnt)){
-									isoline.AddPointInfo(lineFromPnt,0);
+                                    isoline.AddStartPoint(lineFromPnt);
 								}
 								else if(pntEnd.Equals(lineFromPnt)){
-									isoline.AddPointInfo(lineToPnt);
+									isoline.AddEndPoint(lineToPnt);
 								}
 								else if(pntEnd.Equals(lineToPnt)){
-									isoline.AddPointInfo(lineFromPnt);
+									isoline.AddEndPoint(lineFromPnt);
 								}
 								else{
 									matchFlag = false;
@@ -616,13 +616,13 @@ namespace Hykj.Isoline.Isobands
 					}
 				}
 				if(!matchFlag){    //如果没有找到匹配的等值线，则添加一条新的等值线
-                    IsoLineInfo isoline = new IsoLineInfo(value);  
-					isoline.AddPointInfo(lineFromPnt);
-					isoline.AddPointInfo(lineToPnt);
+                    IsoLineInfo isoline = new IsoLineInfo(value);
+                    isoline.AddStartPoint(lineFromPnt);
+					isoline.AddEndPoint(lineToPnt);
 					
-					if(lineFromPnt.IsEdge || lineToPnt.IsEdge){
-						isoline.LineType = true;  //开放型等值线
-					}
+                    //if(lineFromPnt.IsEdge || lineToPnt.IsEdge){
+                    //    isoline.LineType = true;  //开放型等值线
+                    //}
 					tempIsolines.Add(isoline);
 				}
 			}
@@ -635,19 +635,21 @@ namespace Hykj.Isoline.Isobands
         {
 			double angle = 0,dis;
 			double maxDis = 0;
-			List<PointInfo> linePnts = isoline.ListVertrix;
-			PointInfo pnt1,pnt2;
+			List<PointCoord> linePnts = isoline.ListVertrix;
+			PointCoord pnt1,pnt2;
             PointCoord pntLabel = new PointCoord();
-			for(int i = 0; i < linePnts.Count - 1; i++){
-				pnt1 = linePnts[i];
-				pnt2 = linePnts[i + 1];
-                dis = Math.Sqrt((pnt1.PntCoord.X - pnt2.PntCoord.X) * (pnt1.PntCoord.X - pnt2.PntCoord.X) + (pnt1.PntCoord.Y - pnt2.PntCoord.Y) * (pnt1.PntCoord.Y - pnt2.PntCoord.Y));
-				if(dis>maxDis){
-                    pntLabel.X = (pnt1.PntCoord.X + pnt2.PntCoord.X) / 2;
-                    pntLabel.Y = (pnt1.PntCoord.Y + pnt2.PntCoord.Y) / 2;
-                    angle = (pnt2.PntCoord.Y - pnt1.PntCoord.Y) / (pnt2.PntCoord.X - pnt1.PntCoord.X);
-				}
-			}
+            for (int i = 0; i < linePnts.Count - 1; i++)
+            {
+                pnt1 = linePnts[i];
+                pnt2 = linePnts[i + 1];
+                dis = Math.Sqrt((pnt1.X - pnt2.X) * (pnt1.X - pnt2.X) + (pnt1.Y - pnt2.Y) * (pnt1.Y - pnt2.Y));
+                if (dis > maxDis)
+                {
+                    pntLabel.X = (pnt1.X + pnt2.X) / 2;
+                    pntLabel.Y = (pnt1.Y + pnt2.Y) / 2;
+                    angle = (pnt2.Y - pnt1.Y) / (pnt2.X - pnt1.X);
+                }
+            }
 			return new LabelInfo(pntLabel,angle,isoline.LineValue);
 		}
 
@@ -734,22 +736,24 @@ namespace Hykj.Isoline.Isobands
 				IsoLineInfo lineM = tempIsolines[i];
 				if(lineM.FinishState)
 					continue;
-				PointInfo pntMFrom = lineM.GetLineFrom();
-				PointInfo pntMEnd = lineM.GetLineEnd();
+				PointInfo pntMFrom = lineM.FromPoint;//.GetLineFrom();
+				PointInfo pntMEnd = lineM.ToPoint;//.GetLineEnd();
 				
-				PointInfo pntFrom = line.GetLineFrom();
-				PointInfo pntEnd = line.GetLineEnd();
+				PointInfo pntFrom = line.FromPoint;//.GetLineFrom();
+				PointInfo pntEnd = line.ToPoint;//.GetLineEnd();
 				
 				if(pntMFrom.Equals(pntFrom) && pntMEnd.Equals(pntEnd)){  //首尾相接
-                    for (int ij = line.ListVertrix.Count - 1; ij >= 0; ij--)
+                    for (int ij = line.ListVertrix.Count - 2; ij >= 0; ij--)
                     {
                         lineM.ListVertrix.Add(line.ListVertrix[ij]);
                     }
+                    lineM.SetToPoint(pntFrom);
                     lineM.FinishState = true;
 					return true;
 				}
 				else if(pntMFrom.Equals(pntEnd) && pntMEnd.Equals(pntFrom)){  //首尾相接
                     lineM.ListVertrix.AddRange(line.ListVertrix);
+                    lineM.SetToPoint(pntEnd);
                     lineM.FinishState = true;
                     return true;
 				}
@@ -757,11 +761,12 @@ namespace Hykj.Isoline.Isobands
                     for(int ij = 0;ij<line.ListVertrix.Count;ij++){
                         lineM.ListVertrix.Insert(0, line.ListVertrix[ij]);
                     }
+                    lineM.SetFromPoint(pntEnd);
 					if(pntMEnd.IsEdge && pntEnd.IsEdge)
 					{
 						lineM.FinishState = true;
 					}
-					lineM.LineType = (lineM.LineType || line.LineType);
+                    //lineM.LineType = (lineM.LineType || line.LineType);
 					return true;
 				}
 				else if(pntMFrom.Equals(pntEnd)){
@@ -769,20 +774,22 @@ namespace Hykj.Isoline.Isobands
                     {
                         lineM.ListVertrix.Insert(0, line.ListVertrix[ij]);
                     }
+                    lineM.SetFromPoint(pntFrom);
 					if(pntMEnd.IsEdge && pntFrom.IsEdge)
 					{
 						lineM.FinishState = true;
 					}
-					lineM.LineType = (lineM.LineType || line.LineType);
+                    //lineM.LineType = (lineM.LineType || line.LineType);
 					return true;
 				}
 				else if(pntMEnd.Equals(pntFrom)){
 					lineM.ListVertrix.AddRange(line.ListVertrix);
+                    lineM.SetToPoint(pntEnd);
 					if(pntMFrom.IsEdge && pntEnd.IsEdge)
 					{
 						lineM.FinishState = true;
 					}
-					lineM.LineType = (lineM.LineType || line.LineType);
+                    //lineM.LineType = (lineM.LineType || line.LineType);
 					return true;
 				}
 				else if(pntMEnd.Equals(pntEnd)){
@@ -790,10 +797,11 @@ namespace Hykj.Isoline.Isobands
                     {
                         lineM.ListVertrix.Add(line.ListVertrix[ij]);
                     }
+                    lineM.SetToPoint(pntFrom);
 					if(pntMFrom.IsEdge && pntFrom.IsEdge){
 						lineM.FinishState = true;
 					}
-					lineM.LineType = (lineM.LineType || line.LineType);
+                    //lineM.LineType = (lineM.LineType || line.LineType);
 					return true;
 				}
 			}

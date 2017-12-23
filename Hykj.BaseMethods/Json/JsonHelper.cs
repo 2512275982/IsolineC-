@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Hykj.BaseMethods.Json
+namespace Hykj.BaseMethods
 {
     /// <summary>
     /// Json帮助类

@@ -40,13 +40,13 @@ namespace Hykj.Isoline.Geom
             double y = pnt.Y;
             return CalPntInRing(x, y);
         }
-        //无必须存在的必要，但为了适应现有代码编写，后期需统一处理
-        public bool JudgePntInRing(PointInfo pntInfo)
-        {
-            double x = pntInfo.PntCoord.X;
-            double y = pntInfo.PntCoord.Y;
-            return CalPntInRing(x, y);
-        }
+        ////无必须存在的必要，但为了适应现有代码编写，后期需统一处理
+        //public bool JudgePntInRing(PointInfo pntInfo)
+        //{
+        //    double x = pntInfo.PntCoord.X;
+        //    double y = pntInfo.PntCoord.Y;
+        //    return CalPntInRing(x, y);
+        //}
         /// <summary>
         /// 内部方法，判断坐标值是否位于多边形呢
         /// </summary>

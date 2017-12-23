@@ -13,18 +13,18 @@ namespace Hykj.Isoline.Geom
     public class IsoLineInfo
     {
         //等值线节点集合
-        private List<PointInfo> listVertrix;
-        public List<PointInfo> ListVertrix
+        private List<PointCoord> listVertrix;
+        public List<PointCoord> ListVertrix
         {
             get { return listVertrix; }
             set { listVertrix = value; }
         }
-        //标识等值线类型，开放或者闭合
-        private bool lineType;
+        //标识等值线类型，开放或者闭合,true表示开放型，false表示闭合型
+        private bool lineType = false;
         public bool LineType
         {
             get { return lineType; }
-            set { lineType = value; }
+            //set { lineType = value; }
         }
         //标识等值线状态，是否完成追踪
         private bool finishState;
@@ -50,6 +50,23 @@ namespace Hykj.Isoline.Geom
             set { lineColor = value; }
         }
 
+        private PointInfo fromPoint;
+
+        //等值线起点
+        public PointInfo FromPoint
+        {
+            get { return fromPoint; }
+            set { fromPoint = value; }
+        }
+        //等值线终点
+        private PointInfo toPoint;
+
+        public PointInfo ToPoint
+        {
+            get { return toPoint; }
+            set { toPoint = value; }
+        }
+
         //等值线标注信息
         private LabelInfo label;
         public LabelInfo Label
@@ -64,43 +81,79 @@ namespace Hykj.Isoline.Geom
          */
         public IsoLineInfo(double value)
         {
-            this.listVertrix = new List<PointInfo>();
+            this.listVertrix = new List<PointCoord>();
             this.lineValue = value;
         }
 
-        public void AddPointInfo(PointInfo pntInfo)
+        public void AddEndPoint(PointInfo pntInfo)
         {
-            this.listVertrix.Add(pntInfo);
+            this.listVertrix.Add(pntInfo.PntCoord);
+            //if (this.fromPoint == null)
+            //{
+            //    this.fromPoint = pntInfo;
+            //}
+            //else
+            //{
+            this.toPoint = pntInfo;
+            //}
+            if (pntInfo.IsEdge)
+            {
+                this.lineType = true;
+            }
         }
 
         /*
          * 给当前等值线对象添加点
          */
-        public void AddPointInfo(PointInfo pntInfo, int index)
+        public void AddStartPoint(PointInfo pntInfo)
         {
-            if(index == 0)
+            this.listVertrix.Insert(0, pntInfo.PntCoord);
+            this.fromPoint = pntInfo;
+            if (pntInfo.IsEdge)
             {
-                this.listVertrix.Insert(index, pntInfo);
+                this.lineType = true;
             }
-            else
+        }
+
+        /// <summary>
+        /// 设置线的起点，如果起点是边界点，则等值线为开等值线
+        /// </summary>
+        /// <param name="pnt"></param>
+        public void SetFromPoint(PointInfo pnt)
+        {
+            this.fromPoint = pnt;
+            if(pnt.IsEdge)
             {
-                this.listVertrix.Add(pntInfo);
+                this.lineType = true;
+            }
+        }
+
+        /// <summary>
+        /// 设置线的终点，如果终点是边界点，则等值线为开等值线
+        /// </summary>
+        /// <param name="pnt"></param>
+        public void SetToPoint(PointInfo pnt)
+        {
+            this.toPoint = pnt;
+            if (pnt.IsEdge)
+            {
+                this.lineType = true;
             }
         }
         /*
          * 获取等值线的起点
          */
-        public PointInfo GetLineFrom()
-        {
-            return listVertrix[0];
-        }
+        //public PointInfo GetLineFrom()
+        //{
+        //    return listVertrix[0];
+        //}
         /*
         * 获取等值线的终点
         */
-        public PointInfo GetLineEnd()
-        {
-            return listVertrix[this.listVertrix.Count - 1];
-        }
+        //public PointInfo GetLineEnd()
+        //{
+        //    return listVertrix[this.listVertrix.Count - 1];
+        //}
     }
 
     /// <summary>
