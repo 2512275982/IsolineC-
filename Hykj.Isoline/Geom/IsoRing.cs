@@ -23,7 +23,8 @@ namespace Hykj.Isoline.Geom
         }
         public IsoRing(List<PointCoord> vertries)
         {
-            this.vertries = vertries;
+            this.vertries = new List<PointCoord>();
+            this.vertries.AddRange(vertries);
         }
 
         public void PushPoint(PointCoord pnt)
