@@ -41,7 +41,7 @@ namespace Hykj.Isoline.Isobands
                 {
                     IsoLineInfo tempLine = tempIsolines[j];
                     tempLine.Label = GetLabelInfo(tempLine);
-                    //tempLine.ListVertrix = BsLine(tempLine.ListVertrix, 10);
+                    tempLine.ListVertrix = BsLine(tempLine.ListVertrix, 10);
                     listIsolines.Add(tempLine);
                 }
                 tempIsolines.Clear();
@@ -51,7 +51,7 @@ namespace Hykj.Isoline.Isobands
 
         public List<IsoPolygonInfo> WikiIsolineBand(List<IsoLineInfo> isolines,GridCoord superGrid){
             List<IsoRingInfo> rings = GetIsoRings(isolines, superGrid);
-			isoBands = GetIsoBands(rings);
+            isoBands = GetIsoBands(rings);
 			return isoBands;
         }
 
@@ -64,306 +64,345 @@ namespace Hykj.Isoline.Isobands
 		 * 返回值：listIsoRings，排序后的IsoRingInfo列表
 		 * edit by maxiaoling at 2017.12.14
 		 */
-        private List<IsoRingInfo> GetIsoRings(List<IsoLineInfo> isolines,GridCoord superGrid)
+        private List<IsoRingInfo> GetIsoRings(List<IsoLineInfo> isolines, GridCoord superGrid)
         {
             List<IsoRingInfo> listClass1 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass2 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass3 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass4 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass5 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass6 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass7 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass8 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass9 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass10 = new List<IsoRingInfo>();
-			List<IsoRingInfo> listClass11 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass2 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass3 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass4 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass5 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass6 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass7 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass8 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass9 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass10 = new List<IsoRingInfo>();
+            List<IsoRingInfo> listClass11 = new List<IsoRingInfo>();
 
             double yMax = superGrid.yMax;
             double yMin = superGrid.yMin;
             double xMax = superGrid.xMax;
             double xMin = superGrid.xMin;
-			
-			IsoRing isoRing = null;
+
+            IsoRing isoRing = null;
             IsoRingInfo isoRingInfo = null;
-			string ringId = string.Empty;
+            string ringId = string.Empty;
             bool needAdd = false;
 
             IsoRingInfo ringCompare = null;
-			for(int i=0;i<isolines.Count;i++){
-			    IsoLineInfo line = isolines[i];
-				needAdd = true;
-				if(line.LineType){  //开放型
-					PointInfo pntFrom = line.FromPoint;//.GetLineFrom();
-					PointInfo pntEnd = line.ToPoint;//.GetLineEnd();
-					string type1 = string.Empty,type2 = string.Empty;
+            for (int i = 0; i < isolines.Count; i++)
+            {
+                IsoLineInfo line = isolines[i];
+                needAdd = true;
+                if (line.LineType)
+                {  //开放型
+                    PointInfo pntFrom = line.FromPoint;//.GetLineFrom();
+                    PointInfo pntEnd = line.ToPoint;//.GetLineEnd();
+                    string type1 = string.Empty, type2 = string.Empty;
 
                     if (Math.Abs(pntFrom.PntCoord.X - xMin) < 0.0000001)
                     {
-						type1 = "1";
-					}
+                        type1 = "1";
+                    }
                     else if (Math.Abs(pntFrom.PntCoord.X - xMax) < 0.0000001)
                     {
-						type1 = "3";
-					}
+                        type1 = "3";
+                    }
                     else if (Math.Abs(pntFrom.PntCoord.Y - yMin) < 0.0000001)
                     {
-						type1 = "4";
-					}
+                        type1 = "4";
+                    }
                     else if (Math.Abs(pntFrom.PntCoord.Y - yMax) < 0.0000001)
                     {
-						type1 = "2";
-					}
+                        type1 = "2";
+                    }
                     if (Math.Abs(pntEnd.PntCoord.X - xMin) < 0.0000001)
                     {
-						type2 = "1";
-					}
+                        type2 = "1";
+                    }
                     else if (Math.Abs(pntEnd.PntCoord.X - xMax) < 0.0000001)
                     {
-						type2 = "3";
-					}
+                        type2 = "3";
+                    }
                     else if (Math.Abs(pntEnd.PntCoord.Y - yMin) < 0.0000001)
                     {
-						type2 = "4";
-					}
+                        type2 = "4";
+                    }
                     else if (Math.Abs(pntEnd.PntCoord.Y - yMax) < 0.0000001)
                     {
-						type2 = "2";
-					}
-					string type = type1 + type2;
-					
-					int j;  //JavaScript不存在块作用域，所以此处声明和在for语句外声明效果一致
-					switch(type){
-						case "33":   //第2类
-							ringId = "02" + listClass2.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							//以线的起始点判断是否包含关系，替换为以下判断是否包含的方法，更好理解
-							for(j = 0;j<listClass2.Count; j++){
-								ringCompare = listClass2[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){ //将大的放在前面
-									listClass2.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);  
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass2.Add(isoRingInfo);
-							}
-							break;
-						case "11":  //第3类
-							ringId = "03" + listClass3.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass3.Count;j++){
-								ringCompare = listClass3[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass3.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass3.Add(isoRingInfo);
-							}
-							break;
-						case "44": //第4类
-							ringId = "04" + listClass4.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-						
-							for(j = 0;j<listClass4.Count;j++){
-								ringCompare = listClass4[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass4.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass4.Add(isoRingInfo);
-							}
-							break;
-						case "22":  //第5类
-							ringId = "05" + listClass5.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-						
-							for(j = 0;j<listClass5.Count;j++){
-								ringCompare = listClass5[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass5.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass5.Add(isoRingInfo);
-							}
-							break;
-						case "12":  //第6类
-						case "21":
-							ringId = "06" + listClass6.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRing.PushPoint(new PointCoord(xMin,yMax));  //第6类需要加上一个角点（左上角）
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass6.Count;j++){
-								ringCompare = listClass6[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass6.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass6.Add(isoRingInfo);
-							}
-							break;
-						case "14":  //第7类
-						case "41":
-							ringId = "07" + listClass7.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRing.PushPoint(new PointCoord(xMin,yMin));   //第7类需要加上一个角点（左下角）
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass7.Count;j++){
-								ringCompare = listClass7[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass7.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass7.Add(isoRingInfo);
-							}
-							break;
-						case "34":  //第8类
-						case "43":
-							ringId = "08" + listClass8.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRing.PushPoint(new PointCoord(xMax,yMin));   //第8类需要加上一个角点（右下角）
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass8.Count;j++){
-								ringCompare = listClass8[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass8.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass8.Add(isoRingInfo);
-							}
-							break;
-						case "23":   //第9类
-						case "32":
-							ringId = "09" + listClass9.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
-							isoRing.PushPoint(new PointCoord(xMax,yMax));   //第9类需要加上一个角点（右上角）
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass9.Count;j++){
-								ringCompare = listClass9[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass9.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass9.Add(isoRingInfo);
-							}
-							break;
-						case "13":  //第10类
-						case "31":
-							ringId = "10" + listClass10.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
+                        type2 = "2";
+                    }
+                    string type = type1 + type2;
+
+                    int j;  //JavaScript不存在块作用域，所以此处声明和在for语句外声明效果一致
+                    switch (type)
+                    {
+                        case "33":   //第2类
+                            ringId = "02" + listClass2.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            //以线的起始点判断是否包含关系，替换为以下判断是否包含的方法，更好理解
+                            for (j = 0; j < listClass2.Count; j++)
+                            {
+                                ringCompare = listClass2[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                { //将大的放在前面
+                                    listClass2.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);  
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass2.Add(isoRingInfo);
+                            }
+                            break;
+                        case "11":  //第3类
+                            ringId = "03" + listClass3.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass3.Count; j++)
+                            {
+                                ringCompare = listClass3[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass3.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass3.Add(isoRingInfo);
+                            }
+                            break;
+                        case "44": //第4类
+                            ringId = "04" + listClass4.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass4.Count; j++)
+                            {
+                                ringCompare = listClass4[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass4.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass4.Add(isoRingInfo);
+                            }
+                            break;
+                        case "22":  //第5类
+                            ringId = "05" + listClass5.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass5.Count; j++)
+                            {
+                                ringCompare = listClass5[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass5.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass5.Add(isoRingInfo);
+                            }
+                            break;
+                        case "12":  //第6类
+                        case "21":
+                            ringId = "06" + listClass6.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRing.PushPoint(new PointCoord(xMin, yMax));  //第6类需要加上一个角点（左上角）
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass6.Count; j++)
+                            {
+                                ringCompare = listClass6[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass6.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass6.Add(isoRingInfo);
+                            }
+                            break;
+                        case "14":  //第7类
+                        case "41":
+                            ringId = "07" + listClass7.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRing.PushPoint(new PointCoord(xMin, yMin));   //第7类需要加上一个角点（左下角）
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass7.Count; j++)
+                            {
+                                ringCompare = listClass7[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass7.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass7.Add(isoRingInfo);
+                            }
+                            break;
+                        case "34":  //第8类
+                        case "43":
+                            ringId = "08" + listClass8.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRing.PushPoint(new PointCoord(xMax, yMin));   //第8类需要加上一个角点（右下角）
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass8.Count; j++)
+                            {
+                                ringCompare = listClass8[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass8.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass8.Add(isoRingInfo);
+                            }
+                            break;
+                        case "23":   //第9类
+                        case "32":
+                            ringId = "09" + listClass9.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
+                            isoRing.PushPoint(new PointCoord(xMax, yMax));   //第9类需要加上一个角点（右上角）
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass9.Count; j++)
+                            {
+                                ringCompare = listClass9[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass9.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass9.Add(isoRingInfo);
+                            }
+                            break;
+                        case "13":  //第10类
+                        case "31":
+                            ringId = "10" + listClass10.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
                             if (Math.Abs(line.ToPoint.PntCoord.Y - xMin) < 0.000001)
                             {  //第10类，差两个点，需要考虑添加的顺序
-								isoRing.PushPoint(new PointCoord(xMin,yMin));
-								isoRing.PushPoint(new PointCoord(xMax,yMin));
-							}
-							else{
-								isoRing.PushPoint(new PointCoord(xMax,yMin));
-								isoRing.PushPoint(new PointCoord(xMin,yMin));
-							}
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass10.Count;j++){
-								ringCompare = listClass10[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass10.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass10.Add(isoRingInfo);
-							}
-							break;
-						case "24":  //第11类
-						case "42":
-							ringId = "11" + listClass11.Count.ToString();
-							isoRing = new IsoRing(line.ListVertrix);
+                                isoRing.PushPoint(new PointCoord(xMin, yMin));
+                                isoRing.PushPoint(new PointCoord(xMax, yMin));
+                            }
+                            else
+                            {
+                                isoRing.PushPoint(new PointCoord(xMax, yMin));
+                                isoRing.PushPoint(new PointCoord(xMin, yMin));
+                            }
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass10.Count; j++)
+                            {
+                                ringCompare = listClass10[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass10.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass10.Add(isoRingInfo);
+                            }
+                            break;
+                        case "24":  //第11类
+                        case "42":
+                            ringId = "11" + listClass11.Count.ToString();
+                            isoRing = new IsoRing(line.ListVertrix);
                             if (Math.Abs(line.ToPoint.PntCoord.Y - yMin) < 0.000001)
                             {  //第11类，差两个点，需要考虑添加的顺序   GetLineEnd()
-								isoRing.PushPoint(new PointCoord(xMin,yMin));
-								isoRing.PushPoint(new PointCoord(xMin,yMax));
-							}
-							else{
-								isoRing.PushPoint(new PointCoord(xMin,yMax));
-								isoRing.PushPoint(new PointCoord(xMin,yMin));
-							}
-							isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-							
-							for(j = 0;j<listClass11.Count;j++){
-								ringCompare = listClass11[j];
-								if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1])){
-									listClass11.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-									needAdd = false;
-									break;
-								}
-							}
-							if(needAdd){
-								listClass11.Add(isoRingInfo);
-							}
-							break;
-					}
-				}
-				else{   //闭合型，反向遍历，第1类
-					ringId = "01" + listClass1.Count.ToString();
-					isoRing = new IsoRing(line.ListVertrix);
-					isoRingInfo = new IsoRingInfo(ringId,isoRing,line.LineValue);
-					
-					for(int j = 0; j<listClass1.Count; j++){
-						ringCompare = listClass1[j];
-						if(isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[0])){
-							listClass1.Insert(j,isoRingInfo);//.splice(j,0,isoRingInfo);
-							needAdd = false;
-							break;
-						}
-					}
-					if(needAdd){
-						listClass1.Add(isoRingInfo);
-					}
-				}
-				ringCompare = null;
-			}
-			
-			ringId = "0000";  //添加最外圈矩形
+                                isoRing.PushPoint(new PointCoord(xMin, yMin));
+                                isoRing.PushPoint(new PointCoord(xMin, yMax));
+                            }
+                            else
+                            {
+                                isoRing.PushPoint(new PointCoord(xMin, yMax));
+                                isoRing.PushPoint(new PointCoord(xMin, yMin));
+                            }
+                            isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                            for (j = 0; j < listClass11.Count; j++)
+                            {
+                                ringCompare = listClass11[j];
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                {
+                                    listClass11.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                                    needAdd = false;
+                                    break;
+                                }
+                            }
+                            if (needAdd)
+                            {
+                                listClass11.Add(isoRingInfo);
+                            }
+                            break;
+                    }
+                }
+                else
+                {   //闭合型，反向遍历，第1类
+                    ringId = "01" + listClass1.Count.ToString();
+                    isoRing = new IsoRing(line.ListVertrix);
+                    isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
+
+                    for (int j = 0; j < listClass1.Count; j++)
+                    {
+                        ringCompare = listClass1[j];
+                        if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[0]))
+                        {
+                            listClass1.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
+                            needAdd = false;
+                            break;
+                        }
+                    }
+                    if (needAdd)
+                    {
+                        listClass1.Add(isoRingInfo);
+                    }
+                }
+                ringCompare = null;
+            }
+
+            ringId = "0000";  //添加最外圈矩形
             List<PointCoord> outerEnvelop = new List<PointCoord>();
-            outerEnvelop.Add(new PointCoord(xMax,yMax));
-            outerEnvelop.Add(new PointCoord(xMax,yMin));
-            outerEnvelop.Add(new PointCoord(xMin,yMin));
-            outerEnvelop.Add(new PointCoord(xMin,yMax));
-			isoRing = new IsoRing(outerEnvelop);
-			isoRingInfo = new IsoRingInfo(ringId,isoRing);
-			
-			List<IsoRingInfo> listIsoRings = new List<IsoRingInfo>();
+            outerEnvelop.Add(new PointCoord(xMax, yMax));
+            outerEnvelop.Add(new PointCoord(xMax, yMin));
+            outerEnvelop.Add(new PointCoord(xMin, yMin));
+            outerEnvelop.Add(new PointCoord(xMin, yMax));
+            isoRing = new IsoRing(outerEnvelop);
+            isoRingInfo = new IsoRingInfo(ringId, isoRing);
+
+            List<IsoRingInfo> listIsoRings = new List<IsoRingInfo>();
             listIsoRings.Add(isoRingInfo);
             listIsoRings.AddRange(listClass11);
             listClass11.Clear();
@@ -388,19 +427,19 @@ namespace Hykj.Isoline.Isobands
             listIsoRings.AddRange(listClass1);
             listClass1.Clear();
 
-			listClass1 = null;  //释放内存的操作
-			listClass10 = null;
-			listClass11 = null;
+            listClass1 = null;  //释放内存的操作
+            listClass10 = null;
+            listClass11 = null;
             listClass2 = null;
             listClass3 = null;
             listClass4 = null;
-			listClass5 = null;
+            listClass5 = null;
             listClass6 = null;
             listClass7 = null;
             listClass8 = null;
-			listClass9 = null;
-			
-			return listIsoRings;
+            listClass9 = null;
+
+            return listIsoRings;
         }
 
         private List<IsoPolygonInfo> GetIsoBands(List<IsoRingInfo> listIsoRings)
@@ -500,8 +539,8 @@ namespace Hykj.Isoline.Isobands
 						if(isoline.FinishState)  //如果等值线追踪完成
 							continue;
 						matchFlag = false;
-						PointInfo pntStart = isoline.FromPoint; //.GetLineFrom();
-						PointInfo pntEnd = isoline.ToPoint; //.GetLineEnd();
+                        PointInfo pntStart = isoline.FromPoint; //.GetLineFrom(); //
+                        PointInfo pntEnd = isoline.ToPoint; //.GetLineEnd(); //
 						if(pntStart.IsEdge){
 							if(lineFromPnt.IsEdge){
 								matchFlag = pntEnd.Equals(lineToPnt);
@@ -624,10 +663,6 @@ namespace Hykj.Isoline.Isobands
                     IsoLineInfo isoline = new IsoLineInfo(value);
                     isoline.AddStartPoint(lineFromPnt);
 					isoline.AddEndPoint(lineToPnt);
-					
-                    //if(lineFromPnt.IsEdge || lineToPnt.IsEdge){
-                    //    isoline.LineType = true;  //开放型等值线
-                    //}
 					tempIsolines.Add(isoline);
 				}
 			}
@@ -636,12 +671,12 @@ namespace Hykj.Isoline.Isobands
         /*
 		 * 获取等值线的标注信息，包括位置，角度以及值
 		 */
-		private LabelInfo GetLabelInfo(IsoLineInfo isoline)
+        private LabelInfo GetLabelInfo(IsoLineInfo isoline)
         {
-			double angle = 0,dis;
-			double maxDis = 0;
-			List<PointCoord> linePnts = isoline.ListVertrix;
-			PointCoord pnt1,pnt2;
+            double angle = 0, dis;
+            double maxDis = 0;
+            List<PointCoord> linePnts = isoline.ListVertrix;
+            PointCoord pnt1, pnt2;
             PointCoord pntLabel = new PointCoord();
             for (int i = 0; i < linePnts.Count - 1; i++)
             {
@@ -655,23 +690,23 @@ namespace Hykj.Isoline.Isobands
                     angle = (pnt2.Y - pnt1.Y) / (pnt2.X - pnt1.X);
                 }
             }
-			return new LabelInfo(pntLabel,angle,isoline.LineValue);
-		}
+            return new LabelInfo(pntLabel, angle, isoline.LineValue);
+        }
 
-        private List<PointInfo> BsLine(List<PointInfo> pnts, int clipCount = 15)
+        private List<PointCoord> BsLine(List<PointCoord> pnts, int clipCount = 15)
         {
             try
             {
-                List<PointInfo> listOutputPnts = new List<PointInfo>();
+                List<PointCoord> listOutputPnts = new List<PointCoord>();
 
-                double x0 = 2.0 * pnts[0].PntCoord.X - pnts[1].PntCoord.X;
-                double y0 = 2.0 * pnts[0].PntCoord.Y - pnts[1].PntCoord.Y;
-                PointInfo pnt0 = new PointInfo(x0, y0);
+                double x0 = 2.0 * pnts[0].X - pnts[1].X;
+                double y0 = 2.0 * pnts[0].Y - pnts[1].Y;
+                PointCoord pnt0 = new PointCoord(x0, y0);
 
                 int count = pnts.Count;
-                double xn = 2.0 * pnts[count - 1].PntCoord.X - pnts[count - 2].PntCoord.X;
-                double yn = 2.0 * pnts[count - 1].PntCoord.Y - pnts[count - 2].PntCoord.Y;
-                PointInfo pntn = new PointInfo(xn, yn);
+                double xn = 2.0 * pnts[count - 1].X - pnts[count - 2].X;
+                double yn = 2.0 * pnts[count - 1].Y - pnts[count - 2].Y;
+                PointCoord pntn = new PointCoord(xn, yn);
 
                 pnts.Insert(0, pnt0);
                 pnts.Add(pntn);
@@ -682,14 +717,14 @@ namespace Hykj.Isoline.Isobands
                 double dt = 1.0 / clipCount;
                 for (int i = 0; i < pnts.Count - 3; i++)
                 {
-                    A0 = (pnts[i].PntCoord.X + 4.0 * pnts[i + 1].PntCoord.X + pnts[i + 2].PntCoord.X) / 6.0;
-                    A1 = -(pnts[i].PntCoord.X - pnts[i + 2].PntCoord.X) / 2.0;
-                    A2 = (pnts[i].PntCoord.X - 2.0 * pnts[i + 1].PntCoord.X + pnts[i + 2].PntCoord.X) / 2.0;
-                    A3 = -(pnts[i].PntCoord.X - 3.0 * pnts[i + 1].PntCoord.X + 3.0 * pnts[i + 2].PntCoord.X - pnts[i + 3].PntCoord.X) / 6.0;
-                    B0 = (pnts[i].PntCoord.Y + 4.0 * pnts[i + 1].PntCoord.Y + pnts[i + 2].PntCoord.Y) / 6.0;
-                    B1 = -(pnts[i].PntCoord.Y - pnts[i + 2].PntCoord.Y) / 2.0;
-                    B2 = (pnts[i].PntCoord.Y - 2.0 * pnts[i + 1].PntCoord.Y + pnts[i + 2].PntCoord.Y) / 2.0;
-                    B3 = -(pnts[i].PntCoord.Y - 3.0 * pnts[i + 1].PntCoord.Y + 3.0 * pnts[i + 2].PntCoord.Y - pnts[i + 3].PntCoord.Y) / 6.0;
+                    A0 = (pnts[i].X + 4.0 * pnts[i + 1].X + pnts[i + 2].X) / 6.0;
+                    A1 = -(pnts[i].X - pnts[i + 2].X) / 2.0;
+                    A2 = (pnts[i].X - 2.0 * pnts[i + 1].X + pnts[i + 2].X) / 2.0;
+                    A3 = -(pnts[i].X - 3.0 * pnts[i + 1].X + 3.0 * pnts[i + 2].X - pnts[i + 3].X) / 6.0;
+                    B0 = (pnts[i].Y + 4.0 * pnts[i + 1].Y + pnts[i + 2].Y) / 6.0;
+                    B1 = -(pnts[i].Y - pnts[i + 2].Y) / 2.0;
+                    B2 = (pnts[i].Y - 2.0 * pnts[i + 1].Y + pnts[i + 2].Y) / 2.0;
+                    B3 = -(pnts[i].Y - 3.0 * pnts[i + 1].Y + 3.0 * pnts[i + 2].Y - pnts[i + 3].Y) / 6.0;
 
                     double t1, t2, t3 = 0;
                     for (int j = 0; j < clipCount + 1; j++)
@@ -701,7 +736,7 @@ namespace Hykj.Isoline.Isobands
                         double x = A0 + A1 * t1 + A2 * t2 + A3 * t3;
                         double y = B0 + B1 * t1 + B2 * t2 + B3 * t3;
 
-                        listOutputPnts.Add(new PointInfo(x, y));
+                        listOutputPnts.Add(new PointCoord(x, y));
                     }
                 }
                 return listOutputPnts;
@@ -740,73 +775,71 @@ namespace Hykj.Isoline.Isobands
 				IsoLineInfo lineM = tempIsolines[i];
 				if(lineM.FinishState)
 					continue;
-				PointInfo pntMFrom = lineM.FromPoint;//.GetLineFrom();
-				PointInfo pntMEnd = lineM.ToPoint;//.GetLineEnd();
-				
-				PointInfo pntFrom = line.FromPoint;//.GetLineFrom();
-				PointInfo pntEnd = line.ToPoint;//.GetLineEnd();
+                PointInfo pntMFrom = lineM.FromPoint;//.GetLineFrom(); //
+                PointInfo pntMEnd = lineM.ToPoint;//.GetLineEnd();  //
+
+                PointInfo pntFrom = line.FromPoint;//.GetLineFrom();  //
+                PointInfo pntEnd = line.ToPoint;//.GetLineEnd();  //
 				
 				if(pntMFrom.Equals(pntFrom) && pntMEnd.Equals(pntEnd)){  //首尾相接
-                    for (int ij = line.ListVertrix.Count - 2; ij >= 0; ij--)
+                    for (int ij = line.ListVertrix.Count - 1; ij >= 0; ij--)
                     {
-                        lineM.ListVertrix.Add(line.ListVertrix[ij]);
+                        lineM.AddEndPoint(line.ListVertrix[ij]);
                     }
                     lineM.SetToPoint(pntFrom);
                     lineM.FinishState = true;
-					return true;
+                    return true;
 				}
 				else if(pntMFrom.Equals(pntEnd) && pntMEnd.Equals(pntFrom)){  //首尾相接
-                    lineM.ListVertrix.AddRange(line.ListVertrix);
+                    lineM.AddPoints(line.ListVertrix);
                     lineM.SetToPoint(pntEnd);
                     lineM.FinishState = true;
                     return true;
 				}
 				else if(pntMFrom.Equals(pntFrom)){
-                    for(int ij = 0;ij<line.ListVertrix.Count;ij++){
-                        lineM.ListVertrix.Insert(0, line.ListVertrix[ij]);
+                    for (int ij = 0; ij < line.ListVertrix.Count; ij++)
+                    {
+                        lineM.AddStartPoint(line.ListVertrix[ij]);
                     }
                     lineM.SetFromPoint(pntEnd);
-					if(pntMEnd.IsEdge && pntEnd.IsEdge)
-					{
-						lineM.FinishState = true;
-					}
-                    //lineM.LineType = (lineM.LineType || line.LineType);
-					return true;
+                    if (pntMEnd.IsEdge && pntEnd.IsEdge)
+                    {
+                        lineM.FinishState = true;
+                    }
+                    return true;
 				}
 				else if(pntMFrom.Equals(pntEnd)){
                     for (int ij = line.ListVertrix.Count - 1; ij >= 0; ij--)
                     {
-                        lineM.ListVertrix.Insert(0, line.ListVertrix[ij]);
+                        lineM.AddStartPoint(line.ListVertrix[ij]);
                     }
                     lineM.SetFromPoint(pntFrom);
-					if(pntMEnd.IsEdge && pntFrom.IsEdge)
-					{
-						lineM.FinishState = true;
-					}
-                    //lineM.LineType = (lineM.LineType || line.LineType);
-					return true;
+                    if (pntMEnd.IsEdge && pntFrom.IsEdge)
+                    {
+                        lineM.FinishState = true;
+                    }
+                    return true;
 				}
 				else if(pntMEnd.Equals(pntFrom)){
-					lineM.ListVertrix.AddRange(line.ListVertrix);
+                    lineM.AddPoints(line.ListVertrix);
                     lineM.SetToPoint(pntEnd);
-					if(pntMFrom.IsEdge && pntEnd.IsEdge)
-					{
-						lineM.FinishState = true;
-					}
-                    //lineM.LineType = (lineM.LineType || line.LineType);
-					return true;
+                    if (pntMFrom.IsEdge && pntEnd.IsEdge)
+                    {
+                        lineM.FinishState = true;
+                    }
+                    return true;
 				}
 				else if(pntMEnd.Equals(pntEnd)){
                     for (int ij = line.ListVertrix.Count - 1; ij >= 0; ij--)
                     {
-                        lineM.ListVertrix.Add(line.ListVertrix[ij]);
+                        lineM.AddEndPoint(line.ListVertrix[ij]);
                     }
                     lineM.SetToPoint(pntFrom);
-					if(pntMFrom.IsEdge && pntFrom.IsEdge){
-						lineM.FinishState = true;
-					}
-                    //lineM.LineType = (lineM.LineType || line.LineType);
-					return true;
+                    if (pntMFrom.IsEdge && pntFrom.IsEdge)
+                    {
+                        lineM.FinishState = true;
+                    }
+                    return true;
 				}
 			}
 			

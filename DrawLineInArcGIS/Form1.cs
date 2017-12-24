@@ -140,8 +140,8 @@ namespace DrawLineInArcGIS
                     for (int j = 0; j < lines.ListVertrix.Count; j++)
                     {
                         IPoint pnt = new PointClass();
-                        pnt.X = lines.ListVertrix[j].PntCoord.X;
-                        pnt.Y = lines.ListVertrix[j].PntCoord.Y;
+                        pnt.X = lines.ListVertrix[j].X;
+                        pnt.Y = lines.ListVertrix[j].Y;
 
                         pntColl.AddPoint(pnt);
                     }
@@ -154,8 +154,8 @@ namespace DrawLineInArcGIS
 
                     if (!lines.FinishState)
                     {
-                        Hykj.Isoline.Geom.PointInfo pntFrom = lines.GetLineFrom();
-                        Hykj.Isoline.Geom.PointInfo pntEnd = lines.GetLineEnd();
+                        Hykj.Isoline.Geom.PointInfo pntFrom = lines.FromPoint;//.GetLineFrom();
+                        Hykj.Isoline.Geom.PointInfo pntEnd = lines.ToPoint;//.GetLineEnd();
 
                         IPoint pntF = new PointClass();
                         pntF.X = pntFrom.PntCoord.X;

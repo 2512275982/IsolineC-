@@ -24,7 +24,6 @@ namespace Hykj.Isoline.Geom
         public bool LineType
         {
             get { return lineType; }
-            //set { lineType = value; }
         }
         //标识等值线状态，是否完成追踪
         private bool finishState;
@@ -85,26 +84,34 @@ namespace Hykj.Isoline.Geom
             this.lineValue = value;
         }
 
+        /// <summary>
+        /// 给当前线后面增加一个点
+        /// </summary>
+        /// <param name="pntInfo">PointInfo对象</param>
         public void AddEndPoint(PointInfo pntInfo)
         {
+            //this.listVertrix.Add(pntInfo);
             this.listVertrix.Add(pntInfo.PntCoord);
-            //if (this.fromPoint == null)
-            //{
-            //    this.fromPoint = pntInfo;
-            //}
-            //else
-            //{
             this.toPoint = pntInfo;
-            //}
             if (pntInfo.IsEdge)
             {
                 this.lineType = true;
             }
         }
 
-        /*
-         * 给当前等值线对象添加点
-         */
+        /// <summary>
+        /// 给当前线增加一系列点，需要和SetToPoint方法一起使用，否则会造成终止点和实际不符合的情况
+        /// </summary>
+        /// <param name="listPnts">PointCoord列表，List</param>
+        public void AddPoints(List<PointCoord> listPnts)
+        {
+            this.listVertrix.AddRange(listPnts);
+        }
+
+        /// <summary>
+        /// 给当前线前端插入一个点
+        /// </summary>
+        /// <param name="pntInfo">PointInfo对象</param>
         public void AddStartPoint(PointInfo pntInfo)
         {
             this.listVertrix.Insert(0, pntInfo.PntCoord);
@@ -116,17 +123,14 @@ namespace Hykj.Isoline.Geom
         }
 
         /// <summary>
-        /// 设置线的起点，如果起点是边界点，则等值线为开等值线
+        /// 在线串添加一个点，需要和后面的SetToPoint一起使用
         /// </summary>
-        /// <param name="pnt"></param>
-        public void SetFromPoint(PointInfo pnt)
+        /// <param name="pntInfo">PointCoord对象</param>
+        public void AddEndPoint(PointCoord pntInfo)
         {
-            this.fromPoint = pnt;
-            if(pnt.IsEdge)
-            {
-                this.lineType = true;
-            }
+            this.listVertrix.Add(pntInfo);
         }
+
 
         /// <summary>
         /// 设置线的终点，如果终点是边界点，则等值线为开等值线
@@ -140,6 +144,30 @@ namespace Hykj.Isoline.Geom
                 this.lineType = true;
             }
         }
+
+        /// <summary>
+        /// 在线串前面插入一个点，需要和后面的SetFromPoint一起使用
+        /// </summary>
+        /// <param name="pntInfo"></param>
+        public void AddStartPoint(PointCoord pntInfo)
+        {
+            this.listVertrix.Insert(0, pntInfo);
+        }
+
+        /// <summary>
+        /// 设置线的起点，如果起点是边界点，则等值线为开等值线
+        /// </summary>
+        /// <param name="pnt"></param>
+        public void SetFromPoint(PointInfo pnt)
+        {
+            this.fromPoint = pnt;
+            if (pnt.IsEdge)
+            {
+                this.lineType = true;
+            }
+        }
+
+
         /*
          * 获取等值线的起点
          */
@@ -147,9 +175,9 @@ namespace Hykj.Isoline.Geom
         //{
         //    return listVertrix[0];
         //}
-        /*
-        * 获取等值线的终点
-        */
+        ///*
+        //* 获取等值线的终点
+        //*/
         //public PointInfo GetLineEnd()
         //{
         //    return listVertrix[this.listVertrix.Count - 1];
