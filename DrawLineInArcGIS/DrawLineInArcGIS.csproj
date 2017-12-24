@@ -121,9 +121,9 @@
       <Project>{c789562b-263d-4b5d-8a19-f7122116e7ef}</Project>
       <Name>Hykj.BaseMethods</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hykj.Isoline\Hykj.Isoline.csproj">
+    <ProjectReference Include="..\Hykj.Isoline\Hykj.GISModule.csproj">
       <Project>{2e2fc908-efa1-4e48-b66b-463d9187a054}</Project>
-      <Name>Hykj.Isoline</Name>
+      <Name>Hykj.GISModule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

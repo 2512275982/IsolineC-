@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawLineInArcGIS", "DrawLineInArcGIS\DrawLineInArcGIS.csproj", "{8AC62E9F-E511-4643-BB30-0BA6B516066A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.Isoline", "Hykj.Isoline\Hykj.Isoline.csproj", "{2E2FC908-EFA1-4E48-B66B-463D9187A054}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.GISModule", "Hykj.Isoline\Hykj.GISModule.csproj", "{2E2FC908-EFA1-4E48-B66B-463D9187A054}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.BaseMethods", "Hykj.BaseMethods\Hykj.BaseMethods.csproj", "{C789562B-263D-4B5D-8A19-F7122116E7EF}"
 EndProject

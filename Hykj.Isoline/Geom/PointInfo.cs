@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Hykj.Isoline.Geom
+namespace Hykj.GISModule.Geom
 {
     /// <summary>
     /// 定义点类，并定义一个公共函数，用于判断点位置是否一致，判断精度需要再考虑

@@ -1,8 +1,8 @@
-﻿using Hykj.Isoline.Geom;
+﻿using Hykj.GISModule.Geom;
 using System;
 using System.Collections.Generic;
 
-namespace Hykj.Isoline.Isobands
+namespace Hykj.GISModule.Isobands
 {
     /// <summary>
     /// 

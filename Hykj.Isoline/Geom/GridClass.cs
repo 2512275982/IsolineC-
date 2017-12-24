@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hykj.Isoline.Geom
+namespace Hykj.GISModule.Geom
 {
     /// <summary>
     /// 网格生成类，用于网格插值

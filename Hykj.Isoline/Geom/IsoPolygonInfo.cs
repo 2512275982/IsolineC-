@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Hykj.Isoline.Geom
+namespace Hykj.GISModule.Geom
 {
     /// <summary>
     /// 多边形，支持环多边形，由IsoRing组成

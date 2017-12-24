@@ -17,8 +17,8 @@ using ESRI.ArcGIS.SystemUI;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.ADF.Connection.Local;
 using ESRI.ArcGIS.ADF;
-using Hykj.Isoline.Geom;
-using Hykj.Isoline.Isobands;
+using Hykj.GISModule.Geom;
+using Hykj.GISModule.Isobands;
 
 namespace DrawLineInArcGIS
 {
@@ -154,8 +154,8 @@ namespace DrawLineInArcGIS
 
                     if (!lines.FinishState)
                     {
-                        Hykj.Isoline.Geom.PointInfo pntFrom = lines.FromPoint;//.GetLineFrom();
-                        Hykj.Isoline.Geom.PointInfo pntEnd = lines.ToPoint;//.GetLineEnd();
+                        Hykj.GISModule.Geom.PointInfo pntFrom = lines.FromPoint;//.GetLineFrom();
+                        Hykj.GISModule.Geom.PointInfo pntEnd = lines.ToPoint;//.GetLineEnd();
 
                         IPoint pntF = new PointClass();
                         pntF.X = pntFrom.PntCoord.X;
