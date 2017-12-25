@@ -219,6 +219,7 @@ namespace DrawLineInArcGIS
 
                         pntColl.AddPoint(pnt);
                     }
+                    pntColl.AddPoint(pntColl.get_Point(0));
                     IRing outerRing = pntColl as IRing;
                     geomCol.AddGeometry(outerRing);
 
@@ -235,12 +236,14 @@ namespace DrawLineInArcGIS
 
                             pntColIn.AddPoint(pnt);
                         }
+
+                        pntColIn.AddPoint(pntColIn.get_Point(0));
                         IRing inerRing = pntColIn as IRing;
                         geomCol.AddGeometry(inerRing);
                     }
 
                     polygonBuffer.Shape = polygon;
-                    polygonBuffer.set_Value(indexLine, poly.MaxValue);
+                    polygonBuffer.set_Value(indexLine, poly.Value);
                     polyCursor.InsertFeature(polygonBuffer);
                 }
                 polyCursor.Flush();

@@ -15,18 +15,21 @@ namespace Hykj.GISModule
     public  class IsoPolygonInfo
     {
         #region 属性
-        private double minValue;  //外环等值线的值为小的情况下，使用等值线上一区间色渲染
-        public double MinValue
+
+        //当前等值线外环值，用于计算等值线渲染颜色
+        private double value;
+        public double Value
         {
-            get { return minValue; }
-            set { minValue = value; }
+            get { return this.value; }
+            //set { this.value = value; }
         }
 
-        private double maxValue;  //外环等值线为大值的情况下，使用等值线下一区间色渲染
-        public double MaxValue
+        //valueType标识值的类型，1标识当前值为等值面的最小值，0标识当前值为等值面的最大值，-1标识等值面未赋值
+        private int valueType = -1;
+        public int ValueType
         {
-            get { return maxValue; }
-            set { maxValue = value; }
+            get { return valueType; }
+            //set { valueType = value; }
         }
 
         private IsoRing outerRing;
@@ -66,6 +69,19 @@ namespace Hykj.GISModule
         public void AddInterRing(IsoRing isoRing)
         {
             this.interRings.Add(isoRing);
+        }
+
+        public void SetValue(double value,bool isMax)
+        {
+            this.value = value;
+            if (isMax)
+            {
+                this.valueType = 0;
+            }
+            else
+            {
+                this.valueType = 1;
+            }
         }
         #endregion
     }
