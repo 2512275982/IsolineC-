@@ -17,7 +17,7 @@ using ESRI.ArcGIS.SystemUI;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.ADF.Connection.Local;
 using ESRI.ArcGIS.ADF;
-using Hykj.GISModule.Geom;
+using Hykj.GISModule;
 using Hykj.GISModule.Isobands;
 
 namespace DrawLineInArcGIS
@@ -69,16 +69,6 @@ namespace DrawLineInArcGIS
             ITable polygonTable = (ITable)polygonClass;
             polygonTable.DeleteSearchedRows(pQueryFilter);
 
-
-            //IFeatureCursor pFeatureCursor = featClass.Update(pQueryFilter, false);
-            //IFeature pFeature = pFeatureCursor.NextFeature();
-            //while (pFeature != null)
-            //{
-            //    pFeatureCursor.DeleteFeature();
-            //    pFeature = pFeatureCursor.NextFeature();
-            //}
-            //System.Runtime.InteropServices.Marshal.ReleaseComObject(pQueryFilter);
-
             workspaceEdit.StopEditOperation();
             workspaceEdit.StopEditing(true);
         }
@@ -109,7 +99,7 @@ namespace DrawLineInArcGIS
             IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
 
             GridIsoline gridIsoline = TestIsoline.ReadJsonFile();
-            List<IsoLineInfo> listLines = gridIsoline.ListIsolines;
+            List<IsoLineInfo> listLines = gridIsoline.Isolines;
             List<IsoPolygonInfo> listPolys = gridIsoline.IsoBands;
 
             workspaceEdit.StartEditing(false);
@@ -154,8 +144,8 @@ namespace DrawLineInArcGIS
 
                     if (!lines.FinishState)
                     {
-                        Hykj.GISModule.Geom.PointInfo pntFrom = lines.FromPoint;//.GetLineFrom();
-                        Hykj.GISModule.Geom.PointInfo pntEnd = lines.ToPoint;//.GetLineEnd();
+                        Hykj.GISModule.PointInfo pntFrom = lines.FromPoint;//.GetLineFrom();
+                        Hykj.GISModule.PointInfo pntEnd = lines.ToPoint;//.GetLineEnd();
 
                         IPoint pntF = new PointClass();
                         pntF.X = pntFrom.PntCoord.X;
@@ -183,6 +173,141 @@ namespace DrawLineInArcGIS
             workspaceEdit.StopEditOperation();
             workspaceEdit.StopEditing(true);
             MessageBox.Show(sunCount.ToString());
+        }
+
+        private void btnTestIsoband_Click(object sender, EventArgs e)
+        {
+            IMap map = this.axMapControl1.Map;
+            ILayer polygonLayer = map.get_Layer(2);
+            IFeatureLayer featPolyLayer = polygonLayer as IFeatureLayer;
+            IFeatureClass featPolyClass = featPolyLayer.FeatureClass;
+
+            GridIsoline gridIsoline = TestIsoline.ReadJsonFile();
+            List<IsoPolygonInfo> listPolys = gridIsoline.IsoBands;
+
+            IFeatureDataset featDataset = featPolyClass.FeatureDataset;
+            IWorkspace workspace = featDataset.Workspace;
+            IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+
+            workspaceEdit.StartEditing(false);
+            workspaceEdit.StartEditOperation();
+
+            int sunCount = 0;
+
+            using (ComReleaser comReleaser = new ComReleaser())
+            {
+                int indexLine = featPolyClass.FindField("Value");
+                IFeatureBuffer polygonBuffer = featPolyClass.CreateFeatureBuffer();
+                comReleaser.ManageLifetime(polygonBuffer);
+
+                IFeatureCursor polyCursor = featPolyClass.Insert(true);
+                comReleaser.ManageLifetime(polyCursor);
+
+                for (int i = 0; i < listPolys.Count; i++)
+                {
+                    IsoPolygonInfo poly = listPolys[i];
+
+                    IPolygon polygon = new PolygonClass();
+                    IGeometryCollection geomCol = polygon as IGeometryCollection;
+
+                    IPointCollection pntColl = new RingClass();
+                    for (int j = 0; j < poly.OuterRing.Vertries.Count; j++)
+                    {
+                        IPoint pnt = new PointClass();
+                        pnt.X = poly.OuterRing.Vertries[j].X;
+                        pnt.Y = poly.OuterRing.Vertries[j].Y;
+
+                        pntColl.AddPoint(pnt);
+                    }
+                    IRing outerRing = pntColl as IRing;
+                    geomCol.AddGeometry(outerRing);
+
+                    for (int ij = 0; ij < poly.InterRings.Count; ij++)
+                    {
+                        IPointCollection pntColIn = new RingClass();
+
+                        List<PointCoord> listVertrix = poly.InterRings[ij].Vertries;
+                        for (int j = 0; j < listVertrix.Count; j++)
+                        {
+                            IPoint pnt = new PointClass();
+                            pnt.X = listVertrix[j].X;
+                            pnt.Y = listVertrix[j].Y;
+
+                            pntColIn.AddPoint(pnt);
+                        }
+                        IRing inerRing = pntColIn as IRing;
+                        geomCol.AddGeometry(inerRing);
+                    }
+
+                    polygonBuffer.Shape = polygon;
+                    polygonBuffer.set_Value(indexLine, poly.MaxValue);
+                    polyCursor.InsertFeature(polygonBuffer);
+                }
+                polyCursor.Flush();
+            }
+
+            workspaceEdit.StopEditOperation();
+            workspaceEdit.StopEditing(true);
+            MessageBox.Show(sunCount.ToString());
+        }
+
+        private void btnRing_Click(object sender, EventArgs e)
+        {
+            //IMap map = this.axMapControl1.Map;
+            //ILayer polygonLayer = map.get_Layer(2);
+            //IFeatureLayer featPolyLayer = polygonLayer as IFeatureLayer;
+            //IFeatureClass featPolyClass = featPolyLayer.FeatureClass;
+
+            //List<IsoRingInfo> listPolys = TestIsoline.ReadJsonFile1();
+
+            //IFeatureDataset featDataset = featPolyClass.FeatureDataset;
+            //IWorkspace workspace = featDataset.Workspace;
+            //IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+
+            //workspaceEdit.StartEditing(false);
+            //workspaceEdit.StartEditOperation();
+
+            //using (ComReleaser comReleaser = new ComReleaser())
+            //{
+            //    int indexLine = featPolyClass.FindField("Value");
+            //    int indexType = featPolyClass.FindField("TYPE");
+            //    IFeatureBuffer polygonBuffer = featPolyClass.CreateFeatureBuffer();
+            //    comReleaser.ManageLifetime(polygonBuffer);
+
+            //    IFeatureCursor polyCursor = featPolyClass.Insert(true);
+            //    comReleaser.ManageLifetime(polyCursor);
+
+            //    for (int i = 0; i < listPolys.Count; i++)
+            //    {
+            //        IsoRingInfo poly = listPolys[i];
+
+            //        IPolygon polygon = new PolygonClass();
+            //        IGeometryCollection geomCol = polygon as IGeometryCollection;
+
+            //        IPointCollection pntColl = new RingClass();
+            //        for (int j = 0; j < poly.IsoRing.Vertries.Count; j++)
+            //        {
+            //            IPoint pnt = new PointClass();
+            //            pnt.X = poly.IsoRing.Vertries[j].X;
+            //            pnt.Y = poly.IsoRing.Vertries[j].Y;
+
+            //            pntColl.AddPoint(pnt);
+            //        }
+            //        IRing outerRing = pntColl as IRing;
+            //        geomCol.AddGeometry(outerRing);
+
+            //        polygonBuffer.Shape = polygon;
+            //        polygonBuffer.set_Value(indexLine, poly.Value);
+            //        polygonBuffer.set_Value(indexType, poly.ID);
+
+            //        polyCursor.InsertFeature(polygonBuffer);
+            //    }
+            //    polyCursor.Flush();
+            //}
+
+            //workspaceEdit.StopEditOperation();
+            //workspaceEdit.StopEditing(true);
+            //MessageBox.Show("OVER");
         }
     }
 }

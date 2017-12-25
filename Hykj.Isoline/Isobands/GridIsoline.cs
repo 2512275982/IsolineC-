@@ -1,58 +1,74 @@
-﻿using Hykj.GISModule.Geom;
+﻿using Hykj.GISModule;
 using System;
 using System.Collections.Generic;
 
 namespace Hykj.GISModule.Isobands
 {
     /// <summary>
-    /// 
+    /// 基于网格插值的等值线和等值面生成方法
+    /// 作者：maxiaoling
+    /// 日期：2017.12.25
     /// </summary>
     public class GridIsoline
     {
+        #region 私有变量
         private List<IsoLineInfo> tempIsolines = new List<IsoLineInfo>();
         private List<IsoLineInfo> listIsolines = new List<IsoLineInfo>();
+        private GridClass gridInfo;
+        private List<IsoPolygonInfo> isoBands;
+        #endregion
 
-        public List<IsoLineInfo> ListIsolines
+        #region 公共属性
+        /// <summary>
+        /// 生成等值线结果
+        /// </summary>
+        public List<IsoLineInfo> Isolines
         {
             get { return listIsolines; }
         }
-        private List<IsoPolygonInfo> isoBands;
 
+        /// <summary>
+        /// 生成的等值面结果
+        /// </summary>
         public List<IsoPolygonInfo> IsoBands
         {
             get { return isoBands; }
         }
-        private PointInfo[,] pntGrid;
+        #endregion
 
-        public GridIsoline(PointInfo[,] gridPnts)
+        #region 构造函数
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="gridInfo">传入参数：网格对象</param>
+        public GridIsoline(GridClass gridInfo)
         {
-            this.pntGrid = gridPnts;
+            this.gridInfo = gridInfo;
         }
+        #endregion
 
-        public List<IsoLineInfo> WikiIsoline(double[] listContourValues)
+        #region 公共方法
+        /// <summary>
+        /// 维基百科方法生成等值线，再由等值线生成等值面方法
+        /// 算法地址：https://en.wikipedia.org/wiki/Marching_squares
+        /// </summary>
+        /// <param name="listContourValues">插值数组</param>
+        /// <param name="type">ALL：生成等值线和等值面；LINE：只生成等值线，默认值为ALL</param>
+        public void WikiIsoLineToBands(double[] listContourValues,string type = "ALL")
         {
-            listIsolines.Clear();
-            for (int i = 0; i < listContourValues.Length; i++)
+            WikiIsoline(listContourValues);
+            if (type == "ALL")
             {
-                GetIsolines(listContourValues[i]);
-                MergeIsolines();
-
-                for (int j = 0; j < tempIsolines.Count; j++)
-                {
-                    IsoLineInfo tempLine = tempIsolines[j];
-                    tempLine.Label = GetLabelInfo(tempLine);
-                    tempLine.ListVertrix = BsLine(tempLine.ListVertrix, 10);
-                    listIsolines.Add(tempLine);
-                }
-                tempIsolines.Clear();
+                WikiIsolineBand(listIsolines, gridInfo.SuperGridCoord);
             }
-            return listIsolines;
         }
+        #endregion
 
-        public List<IsoPolygonInfo> WikiIsolineBand(List<IsoLineInfo> isolines,GridCoord superGrid){
+        #region 等值面生成方法
+        private void WikiIsolineBand(List<IsoLineInfo> isolines, GridCoord superGrid)
+        {
             List<IsoRingInfo> rings = GetIsoRings(isolines, superGrid);
             isoBands = GetIsoBands(rings);
-			return isoBands;
         }
 
         /*
@@ -309,7 +325,7 @@ namespace Hykj.GISModule.Isobands
                         case "31":
                             ringId = "10" + listClass10.Count.ToString();
                             isoRing = new IsoRing(line.ListVertrix);
-                            if (Math.Abs(line.ToPoint.PntCoord.Y - xMin) < 0.000001)
+                            if (Math.Abs(line.ToPoint.PntCoord.X - xMin) < 0.00000000001)
                             {  //第10类，差两个点，需要考虑添加的顺序
                                 isoRing.PushPoint(new PointCoord(xMin, yMin));
                                 isoRing.PushPoint(new PointCoord(xMax, yMin));
@@ -340,7 +356,7 @@ namespace Hykj.GISModule.Isobands
                         case "42":
                             ringId = "11" + listClass11.Count.ToString();
                             isoRing = new IsoRing(line.ListVertrix);
-                            if (Math.Abs(line.ToPoint.PntCoord.Y - yMin) < 0.000001)
+                            if (Math.Abs(line.ToPoint.PntCoord.Y - yMin) < 0.00000000001)
                             {  //第11类，差两个点，需要考虑添加的顺序   GetLineEnd()
                                 isoRing.PushPoint(new PointCoord(xMin, yMin));
                                 isoRing.PushPoint(new PointCoord(xMin, yMax));
@@ -442,6 +458,12 @@ namespace Hykj.GISModule.Isobands
             return listIsoRings;
         }
 
+        /// <summary>
+        /// Step2
+        /// 将上一步骤生成的简单面合并成最终的等值面
+        /// </summary>
+        /// <param name="listIsoRings">上一步骤生成的简单面</param>
+        /// <returns>最终的等值面结果，为IsoPolygonInfo对象列表</returns>
         private List<IsoPolygonInfo> GetIsoBands(List<IsoRingInfo> listIsoRings)
         {
             List<IsoPolygonInfo> listIsoPolys = new List<IsoPolygonInfo>();
@@ -491,19 +513,33 @@ namespace Hykj.GISModule.Isobands
 			}
 			return listIsoPolys;
         }
-        /*
-		 * 将组成线的点转换成面的点数组，后面将点的数组换掉
-		 * 2017.12.13，遗留工作标记
-		 */
-		private List<PointCoord> TransPntArrayToCoors(List<PointInfo> pntArray){
-			List<PointCoord> coords = new List<PointCoord>();
-            for (int i = 0; i < pntArray.Count; i++)
-            {
-                coords.Add(pntArray[i].PntCoord);
-            }
-			return coords;
-		}
+        #endregion
 
+        #region 等值线生成方法
+        /// <summary>
+        /// 等值线生成方法，包括等值线生成、合并、平滑和标注
+        /// </summary>
+        /// <param name="listContourValues">等值线值数组</param>
+        private void WikiIsoline(double[] listContourValues)
+        {
+            listIsolines.Clear();
+            for (int i = 0; i < listContourValues.Length; i++)
+            {
+                GetIsolines(listContourValues[i]);
+                MergeIsolines();
+
+                for (int j = 0; j < tempIsolines.Count; j++)
+                {
+                    IsoLineInfo tempLine = tempIsolines[j];
+                    tempLine.Label = GetLabelInfo(tempLine);
+                    tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
+                    listIsolines.Add(tempLine);
+                }
+                tempIsolines.Clear();
+            }
+        }
+
+        #region 等值线生成合并算法
         /*
 		 * 判断值格网点值与目标值的关系，小于最小值返回0，大于等于返回1
 		 */
@@ -669,85 +705,6 @@ namespace Hykj.GISModule.Isobands
 		}
 
         /*
-		 * 获取等值线的标注信息，包括位置，角度以及值
-		 */
-        private LabelInfo GetLabelInfo(IsoLineInfo isoline)
-        {
-            double angle = 0, dis;
-            double maxDis = 0;
-            List<PointCoord> linePnts = isoline.ListVertrix;
-            PointCoord pnt1, pnt2;
-            PointCoord pntLabel = new PointCoord();
-            for (int i = 0; i < linePnts.Count - 1; i++)
-            {
-                pnt1 = linePnts[i];
-                pnt2 = linePnts[i + 1];
-                dis = Math.Sqrt((pnt1.X - pnt2.X) * (pnt1.X - pnt2.X) + (pnt1.Y - pnt2.Y) * (pnt1.Y - pnt2.Y));
-                if (dis > maxDis)
-                {
-                    pntLabel.X = (pnt1.X + pnt2.X) / 2;
-                    pntLabel.Y = (pnt1.Y + pnt2.Y) / 2;
-                    angle = (pnt2.Y - pnt1.Y) / (pnt2.X - pnt1.X);
-                }
-            }
-            return new LabelInfo(pntLabel, angle, isoline.LineValue);
-        }
-
-        private List<PointCoord> BsLine(List<PointCoord> pnts, int clipCount = 15)
-        {
-            try
-            {
-                List<PointCoord> listOutputPnts = new List<PointCoord>();
-
-                double x0 = 2.0 * pnts[0].X - pnts[1].X;
-                double y0 = 2.0 * pnts[0].Y - pnts[1].Y;
-                PointCoord pnt0 = new PointCoord(x0, y0);
-
-                int count = pnts.Count;
-                double xn = 2.0 * pnts[count - 1].X - pnts[count - 2].X;
-                double yn = 2.0 * pnts[count - 1].Y - pnts[count - 2].Y;
-                PointCoord pntn = new PointCoord(xn, yn);
-
-                pnts.Insert(0, pnt0);
-                pnts.Add(pntn);
-
-                double A0, A1, A2, A3;
-                double B0, B1, B2, B3;
-
-                double dt = 1.0 / clipCount;
-                for (int i = 0; i < pnts.Count - 3; i++)
-                {
-                    A0 = (pnts[i].X + 4.0 * pnts[i + 1].X + pnts[i + 2].X) / 6.0;
-                    A1 = -(pnts[i].X - pnts[i + 2].X) / 2.0;
-                    A2 = (pnts[i].X - 2.0 * pnts[i + 1].X + pnts[i + 2].X) / 2.0;
-                    A3 = -(pnts[i].X - 3.0 * pnts[i + 1].X + 3.0 * pnts[i + 2].X - pnts[i + 3].X) / 6.0;
-                    B0 = (pnts[i].Y + 4.0 * pnts[i + 1].Y + pnts[i + 2].Y) / 6.0;
-                    B1 = -(pnts[i].Y - pnts[i + 2].Y) / 2.0;
-                    B2 = (pnts[i].Y - 2.0 * pnts[i + 1].Y + pnts[i + 2].Y) / 2.0;
-                    B3 = -(pnts[i].Y - 3.0 * pnts[i + 1].Y + 3.0 * pnts[i + 2].Y - pnts[i + 3].Y) / 6.0;
-
-                    double t1, t2, t3 = 0;
-                    for (int j = 0; j < clipCount + 1; j++)
-                    {
-                        t1 = dt * j;
-                        t2 = t1 * t1;
-                        t3 = t1 * t2;
-
-                        double x = A0 + A1 * t1 + A2 * t2 + A3 * t3;
-                        double y = B0 + B1 * t1 + B2 * t2 + B3 * t3;
-
-                        listOutputPnts.Add(new PointCoord(x, y));
-                    }
-                }
-                return listOutputPnts;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        /*
 		 * 合并单值等值线，将一段一段的线合并为一整条等值线
 		 */
 		private void MergeIsolines()
@@ -763,9 +720,11 @@ namespace Hykj.GISModule.Isobands
 			}
 		}
 
-        /*
-		 * 指定某段线的合并实现
-		 */
+        /// <summary>
+        /// 指定某段线的合并实现，基于全局变量tempIsolines
+        /// </summary>
+        /// <param name="index">待合并的线号</param>
+        /// <returns>是否成功合并，true或false</returns>
 		private bool MergeLine(int index)
         {
 			IsoLineInfo line = tempIsolines[index];
@@ -846,8 +805,14 @@ namespace Hykj.GISModule.Isobands
 			return false;
 		}
 
+        /// <summary>
+        /// 根据维基百科方式生成每个值的等值线集合，等值线为一小段一小段等值线
+        /// 算法地址：https://en.wikipedia.org/wiki/Marching_squares
+        /// </summary>
+        /// <param name="lineValue">等值线值</param>
         private void GetIsolines(double lineValue)
         {
+            PointInfo[,] pntGrid = gridInfo.PntGrid;
 			tempIsolines.Clear(); //清空数组
 			for(int i = 0; i < pntGrid.GetLength(0) - 1; i++) {
 				for(int j = 0; j < pntGrid.GetLength(1) - 1; j++) {
@@ -1058,5 +1023,35 @@ namespace Hykj.GISModule.Isobands
 				}
 			}
 		}
+        #endregion
+
+        #region 等值线标注算法
+        /*
+		 * 获取等值线的标注信息，包括位置，角度以及值
+		 */
+        private LabelInfo GetLabelInfo(IsoLineInfo isoline)
+        {
+            double angle = 0, dis;
+            double maxDis = 0;
+            List<PointCoord> linePnts = isoline.ListVertrix;
+            PointCoord pnt1, pnt2;
+            PointCoord pntLabel = new PointCoord();
+            for (int i = 0; i < linePnts.Count - 1; i++)
+            {
+                pnt1 = linePnts[i];
+                pnt2 = linePnts[i + 1];
+                dis = Math.Sqrt((pnt1.X - pnt2.X) * (pnt1.X - pnt2.X) + (pnt1.Y - pnt2.Y) * (pnt1.Y - pnt2.Y));
+                if (dis > maxDis)
+                {
+                    pntLabel.X = (pnt1.X + pnt2.X) / 2;
+                    pntLabel.Y = (pnt1.Y + pnt2.Y) / 2;
+                    angle = (pnt2.Y - pnt1.Y) / (pnt2.X - pnt1.X);
+                }
+            }
+            return new LabelInfo(pntLabel, angle, isoline.LineValue);
+        }
+        #endregion
+
+        #endregion
     }
 }

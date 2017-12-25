@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hykj.GISModule.Geom
+namespace Hykj.GISModule
 {
     /// <summary>
     /// 网格生成类，用于网格插值
@@ -15,6 +15,11 @@ namespace Hykj.GISModule.Geom
         private int gridStep = 150;
         private int extendGridNum = 2;
         private PointInfo[,] pntGrid;  //对应
+
+        public PointInfo[,] PntGrid
+        {
+            get { return pntGrid; }
+        }
 
         private GridCoord superGridCoord;
 
@@ -80,7 +85,10 @@ namespace Hykj.GISModule.Geom
             this.superGridCoord = new GridCoord(xmin, xmax, ymin, ymax);
         }
 
-        public PointInfo[,] GetGrid()
+        /// <summary>
+        /// 计算当前网格对象的插值结果
+        /// </summary>
+        public void GetGrid()
         {
             double dx = this.superGridCoord.xMax - this.superGridCoord.xMin;
             double dy = this.superGridCoord.yMax - this.superGridCoord.yMin;
@@ -120,7 +128,6 @@ namespace Hykj.GISModule.Geom
                     pntGrid[i,j] = pnt;
                 }
             }
-            return pntGrid;
         }
 
         /*

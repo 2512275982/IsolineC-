@@ -34,6 +34,8 @@
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
             this.button2 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.btnTestIsoband = new System.Windows.Forms.Button();
+            this.btnRing = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.axMapControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
@@ -86,11 +88,33 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // btnTestIsoband
+            // 
+            this.btnTestIsoband.Location = new System.Drawing.Point(1190, 390);
+            this.btnTestIsoband.Name = "btnTestIsoband";
+            this.btnTestIsoband.Size = new System.Drawing.Size(91, 23);
+            this.btnTestIsoband.TabIndex = 7;
+            this.btnTestIsoband.Text = "TestIsoband";
+            this.btnTestIsoband.UseVisualStyleBackColor = true;
+            this.btnTestIsoband.Click += new System.EventHandler(this.btnTestIsoband_Click);
+            // 
+            // btnRing
+            // 
+            this.btnRing.Location = new System.Drawing.Point(1190, 462);
+            this.btnRing.Name = "btnRing";
+            this.btnRing.Size = new System.Drawing.Size(91, 23);
+            this.btnRing.TabIndex = 8;
+            this.btnRing.Text = "TestIsoRing";
+            this.btnRing.UseVisualStyleBackColor = true;
+            this.btnRing.Click += new System.EventHandler(this.btnRing_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1360, 688);
+            this.Controls.Add(this.btnRing);
+            this.Controls.Add(this.btnTestIsoband);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.axLicenseControl1);
@@ -113,6 +137,8 @@
         private ESRI.ArcGIS.Controls.AxLicenseControl axLicenseControl1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnTestIsoband;
+        private System.Windows.Forms.Button btnRing;
     }
 }
 

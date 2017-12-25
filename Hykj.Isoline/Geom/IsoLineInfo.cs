@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Hykj.GISModule.Geom
+namespace Hykj.GISModule
 {
     /// <summary>
     /// 定义等值线对象类
