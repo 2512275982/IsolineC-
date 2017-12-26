@@ -21,7 +21,6 @@ namespace Hykj.GISModule
         public double Value
         {
             get { return this.value; }
-            //set { this.value = value; }
         }
 
         //valueType标识值的类型，1标识当前值为等值面的最小值，0标识当前值为等值面的最大值，-1标识等值面未赋值
@@ -29,7 +28,21 @@ namespace Hykj.GISModule
         public int ValueType
         {
             get { return valueType; }
-            //set { valueType = value; }
+        }
+
+        private double minValue = -1;
+
+        public double MinValue
+        {
+            get { return minValue; }
+            set { minValue = value; }
+        }
+        private double maxValue = -1;
+
+        public double MaxValue
+        {
+            get { return maxValue; }
+            set { maxValue = value; }
         }
 
         private IsoRing outerRing;

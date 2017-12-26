@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.GISModule", "Hykj.Isol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hykj.BaseMethods", "Hykj.BaseMethods\Hykj.BaseMethods.csproj", "{C789562B-263D-4B5D-8A19-F7122116E7EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestIsoband", "TestIsoband\TestIsoband.csproj", "{5E91B541-BAF2-4F71-A4B2-AA99C76874F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C789562B-263D-4B5D-8A19-F7122116E7EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E91B541-BAF2-4F71-A4B2-AA99C76874F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E91B541-BAF2-4F71-A4B2-AA99C76874F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E91B541-BAF2-4F71-A4B2-AA99C76874F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E91B541-BAF2-4F71-A4B2-AA99C76874F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

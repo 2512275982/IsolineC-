@@ -489,11 +489,11 @@ namespace Hykj.GISModule.Isobands
 								listIsoRings[index].SetParentValue(ringValue);
 								if(ringValue > listIsoRings[index].Value)
 								{
-                                    //isoPolygon.MaxValue = ringValue;
+                                    isoPolygon.MaxValue = ringValue;
                                     isoPolygon.SetValue(ringValue, true);  //赋值最大值
 								}
 								else if(ringValue < listIsoRings[index].Value){
-                                    //isoPolygon.MinValue = ringValue;
+                                    isoPolygon.MinValue = ringValue;
                                     isoPolygon.SetValue(ringValue, false);  //赋值最小值
 								}
 							}
@@ -505,10 +505,10 @@ namespace Hykj.GISModule.Isobands
 				}
 				if(isoPolygon.InterRings.Count == 0){
 					if(ringValue>listIsoRings[i].ParentValue){
-                        //isoPolygon.MinValue = ringValue;
+                        isoPolygon.MinValue = ringValue;
                         isoPolygon.SetValue(ringValue, false);  //赋值最小值
 					}else{
-                        //isoPolygon.MaxValue = ringValue;
+                        isoPolygon.MaxValue = ringValue;
                         isoPolygon.SetValue(ringValue, true);  //赋值最大值
 					}
 					

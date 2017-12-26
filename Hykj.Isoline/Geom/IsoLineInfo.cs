@@ -166,22 +166,6 @@ namespace Hykj.GISModule
                 this.lineType = true;
             }
         }
-
-
-        /*
-         * 获取等值线的起点
-         */
-        //public PointInfo GetLineFrom()
-        //{
-        //    return listVertrix[0];
-        //}
-        ///*
-        //* 获取等值线的终点
-        //*/
-        //public PointInfo GetLineEnd()
-        //{
-        //    return listVertrix[this.listVertrix.Count - 1];
-        //}
     }
 
     /// <summary>
