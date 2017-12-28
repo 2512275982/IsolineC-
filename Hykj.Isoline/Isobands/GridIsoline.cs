@@ -16,6 +16,8 @@ namespace Hykj.GISModule.Isobands
         private List<IsoLineInfo> listIsolines = new List<IsoLineInfo>();
         private GridClass gridInfo;
         private List<IsoPolygonInfo> isoBands;
+
+        public List<IsoRingInfo> rings;
         #endregion
 
         #region 公共属性
@@ -67,7 +69,7 @@ namespace Hykj.GISModule.Isobands
         #region 等值面生成方法
         private void WikiIsolineBand(List<IsoLineInfo> isolines, GridCoord superGrid)
         {
-            List<IsoRingInfo> rings = GetIsoRings(isolines, superGrid);
+            rings = GetIsoRings(isolines, superGrid); //List<IsoRingInfo> 
             isoBands = GetIsoBands(rings);
         }
 
@@ -466,10 +468,21 @@ namespace Hykj.GISModule.Isobands
         /// <returns>最终的等值面结果，为IsoPolygonInfo对象列表</returns>
         private List<IsoPolygonInfo> GetIsoBands(List<IsoRingInfo> listIsoRings)
         {
+            int cou = 0;
+            for (int i = 0; i < listIsoRings.Count; i++)
+            {
+                IsoRingInfo ringInfo = listIsoRings[i];
+                if (!ringInfo.ValueFlag)
+                {
+                    cou++;
+                }
+            }
+
             List<IsoPolygonInfo> listIsoPolys = new List<IsoPolygonInfo>();
 			IsoPolygonInfo isoPolygon;
 			bool needAdd = false;
 			for(int i = 0;i<listIsoRings.Count;i++){  //循环遍历每一个多边形，找到直接子多边形
+                bool valueFlag = listIsoRings[i].ValueFlag;
 				double ringValue = listIsoRings[i].Value;
 				isoPolygon = new IsoPolygonInfo(listIsoRings[i].IsoRing);
 				for(int index = i+1;index<listIsoRings.Count;index++){
@@ -484,7 +497,7 @@ namespace Hykj.GISModule.Isobands
 						}
 						if(needAdd){
 							isoPolygon.AddInterRing(listIsoRings[index].IsoRing);
-							if(listIsoRings[i].ValueFlag)
+                            if (valueFlag)
 							{
 								listIsoRings[index].SetParentValue(ringValue);
 								if(ringValue > listIsoRings[index].Value)
@@ -499,11 +512,12 @@ namespace Hykj.GISModule.Isobands
 							}
 							else{
 								ringValue = listIsoRings[index].Value;
+                                valueFlag = true;
 							}
 						}
 					}
 				}
-				if(isoPolygon.InterRings.Count == 0){
+				if(isoPolygon.InterRings.Count == 0 || isoPolygon.ValueType == -1){
 					if(ringValue>listIsoRings[i].ParentValue){
                         isoPolygon.MinValue = ringValue;
                         isoPolygon.SetValue(ringValue, false);  //赋值最小值
@@ -536,7 +550,7 @@ namespace Hykj.GISModule.Isobands
                 {
                     IsoLineInfo tempLine = tempIsolines[j];
                     tempLine.Label = GetLabelInfo(tempLine);
-                    tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
+                    //tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
                     listIsolines.Add(tempLine);
                 }
                 tempIsolines.Clear();

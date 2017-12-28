@@ -77,15 +77,15 @@ namespace Hykj.GISModule
                 {
                     x2 = this.vertries[i + 1].X;
                     y2 = this.vertries[i + 1].Y;
-                    if (((y >= y1) && (y < y2)) || ((y >= y2) && (y < y1)))
+                }
+                if (((y >= y1) && (y < y2)) || ((y >= y2) && (y < y1)))
+                {
+                    if (Math.Abs(y1 - y2) > 0)
                     {
-                        if (Math.Abs(y1 - y2) > 0)
+                        dx = x1 - ((x1 - x2) * (y1 - y)) / (y1 - y2);
+                        if (dx < x)
                         {
-                            dx = x1 - ((x1 - x2) * (y1 - y)) / (y1 - y2);
-                            if (dx < x)
-                            {
-                                pSum++;
-                            }
+                            pSum++;
                         }
                     }
                 }

@@ -60,12 +60,11 @@ namespace DrawLineInArcGIS
             //    }
             //}
 
-            //GridClass gridClass = new Hykj.GISModule.Geom.GridClass(listPntInfo);
-            //PointInfo[,] gridInfo = gridClass.GetGrid();
-            //GridIsoline gridIsoline = new GridIsoline(gridInfo);
+            //GridClass gridClass = new Hykj.GISModule.GridClass(listPntInfo);
+            //gridClass.GetGrid();
+            //GridIsoline gridIsoline = new GridIsoline(gridClass);
             //double[] lineValue = new double[] { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105 };
-            //List<IsoLineInfo> listLines = gridIsoline.WikiIsoline(lineValue);
-            //List<IsoPolygonInfo> listPolys = gridIsoline.WikiIsolineBand(listLines, gridClass.SuperGridCoord);
+            //gridIsoline.WikiIsoLineToBands(lineValue);
             //return gridIsoline;
 
         }
