@@ -17,7 +17,7 @@ namespace Hykj.GISModule.Isobands
         private GridClass gridInfo;
         private List<IsoPolygonInfo> isoBands;
 
-        public List<IsoRingInfo> rings;
+        //public List<IsoRingInfo> rings;
         #endregion
 
         #region 公共属性
@@ -69,7 +69,7 @@ namespace Hykj.GISModule.Isobands
         #region 等值面生成方法
         private void WikiIsolineBand(List<IsoLineInfo> isolines, GridCoord superGrid)
         {
-            rings = GetIsoRings(isolines, superGrid); //List<IsoRingInfo> 
+            List<IsoRingInfo> rings = GetIsoRings(isolines, superGrid); //List<IsoRingInfo> 
             isoBands = GetIsoBands(rings);
         }
 
@@ -502,11 +502,11 @@ namespace Hykj.GISModule.Isobands
 								listIsoRings[index].SetParentValue(ringValue);
 								if(ringValue > listIsoRings[index].Value)
 								{
-                                    isoPolygon.MaxValue = ringValue;
+                                    //isoPolygon.MaxValue = ringValue;
                                     isoPolygon.SetValue(ringValue, true);  //赋值最大值
 								}
 								else if(ringValue < listIsoRings[index].Value){
-                                    isoPolygon.MinValue = ringValue;
+                                    //isoPolygon.MinValue = ringValue;
                                     isoPolygon.SetValue(ringValue, false);  //赋值最小值
 								}
 							}
@@ -519,10 +519,10 @@ namespace Hykj.GISModule.Isobands
 				}
 				if(isoPolygon.InterRings.Count == 0 || isoPolygon.ValueType == -1){
 					if(ringValue>listIsoRings[i].ParentValue){
-                        isoPolygon.MinValue = ringValue;
+                        //isoPolygon.MinValue = ringValue;
                         isoPolygon.SetValue(ringValue, false);  //赋值最小值
 					}else{
-                        isoPolygon.MaxValue = ringValue;
+                        //isoPolygon.MaxValue = ringValue;
                         isoPolygon.SetValue(ringValue, true);  //赋值最大值
 					}
 					

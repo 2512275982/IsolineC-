@@ -30,20 +30,20 @@ namespace Hykj.GISModule
             get { return valueType; }
         }
 
-        private double minValue = -1;
+        //private double minValue = -1;
 
-        public double MinValue
-        {
-            get { return minValue; }
-            set { minValue = value; }
-        }
-        private double maxValue = -1;
+        //public double MinValue
+        //{
+        //    get { return minValue; }
+        //    set { minValue = value; }
+        //}
+        //private double maxValue = -1;
 
-        public double MaxValue
-        {
-            get { return maxValue; }
-            set { maxValue = value; }
-        }
+        //public double MaxValue
+        //{
+        //    get { return maxValue; }
+        //    set { maxValue = value; }
+        //}
 
         private IsoRing outerRing;
         public IsoRing OuterRing
