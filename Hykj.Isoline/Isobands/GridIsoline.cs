@@ -550,11 +550,42 @@ namespace Hykj.GISModule.Isobands
                 {
                     IsoLineInfo tempLine = tempIsolines[j];
                     tempLine.Label = GetLabelInfo(tempLine);
+                    tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
+                    tempLine.ListVertrix = SimplyPnts(tempLine.ListVertrix);
                     //tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
-                    listIsolines.Add(tempLine);
+                    if (tempLine.ListVertrix.Count >= 3)
+                    {
+                        listIsolines.Add(tempLine);
+                    }
                 }
                 tempIsolines.Clear();
             }
+        }
+
+        private List<PointCoord> SimplyPnts(List<PointCoord> listVertriex)
+        {
+            List<PointCoord> listResult = new List<PointCoord>();
+            double xLast = 0, yLast = 0;
+            for (int i = 0; i < listVertriex.Count; i++)
+            {
+                PointCoord pnt = listVertriex[i];
+
+                double xNew = Math.Round(pnt.X, 8);
+                double yNew = Math.Round(pnt.Y, 8);
+
+                if (i > 0)
+                {
+                    if (xNew == xLast && yNew == yLast)
+                    {
+                        continue;
+                    }
+                }
+                PointCoord pntNew = new PointCoord(Math.Round(pnt.X, 8), Math.Round(pnt.Y, 8));
+                listResult.Add(pntNew);
+                xLast = xNew;
+                yLast = yNew;
+            }
+            return listResult;
         }
 
         #region 等值线生成合并算法

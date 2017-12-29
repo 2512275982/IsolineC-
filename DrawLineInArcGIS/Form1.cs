@@ -361,6 +361,7 @@ namespace DrawLineInArcGIS
 
         private void btnRing_Click(object sender, EventArgs e)
         {
+            TestIsoline.ReadJsonFile1();
             //IMap map = this.axMapControl1.Map;
             //ILayer polygonLayer = map.get_Layer(2);
             //IFeatureLayer featPolyLayer = polygonLayer as IFeatureLayer;
@@ -417,7 +418,7 @@ namespace DrawLineInArcGIS
 
             //workspaceEdit.StopEditOperation();
             //workspaceEdit.StopEditing(true);
-            //MessageBox.Show("OVER");
+            MessageBox.Show("OVER");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Hykj.GISModule
     public class GridClass
     {
         private List<PointInfo> listOriginPnts;
-        private int gridStep = 150;
+        private int gridStep = 100;
         private int extendGridNum = 2;
         private PointInfo[,] pntGrid;  //对应
 
