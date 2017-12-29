@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\Cls_LineSmooth.cs" />
+    <Compile Include="Algorithm\Coordinate.cs" />
     <Compile Include="Geom\GridClass.cs" />
     <Compile Include="Geom\IsoLineInfo.cs" />
     <Compile Include="Geom\IsoRing.cs" />

@@ -36,6 +36,8 @@ namespace Hykj.GISModule
         {
             this.listOriginPnts = listPntInfo;
             GetSuperGrid();
+
+
         }
 
         /*
@@ -83,6 +85,25 @@ namespace Hykj.GISModule
                 }
             }
             this.superGridCoord = new GridCoord(xmin, xmax, ymin, ymax);
+
+            大地坐标 pnt_Orin = new 大地坐标(xmin, ymin, 0);
+            大地坐标 pntXmax = new 大地坐标(xmax, ymin, 0);
+            大地坐标 pntYmax = new 大地坐标(xmin, ymax, 0);
+            高斯坐标 xyzOrin = Coordinate.BLH_to_xyh(pnt_Orin);
+            高斯坐标 xyzXmax = Coordinate.BLH_to_xyh(pntXmax);
+            高斯坐标 xyzYmax = Coordinate.BLH_to_xyh(pntYmax);
+
+            double disX = Coordinate.Distance(xyzOrin, xyzXmax);
+            double disY = Coordinate.Distance(xyzOrin, xyzYmax);
+
+            if (disX > disY)
+            {
+                gridStep = (int)(disX / 5) + 1;
+            }
+            else
+            {
+                gridStep = (int)(disY / 5) + 1;
+            }
         }
 
         /// <summary>

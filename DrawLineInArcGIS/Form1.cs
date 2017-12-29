@@ -326,24 +326,24 @@ namespace DrawLineInArcGIS
                     IRing outerRing = pntColl as IRing;
                     geomCol.AddGeometry(outerRing);
 
-                    for (int ij = 0; ij < poly.InterRings.Count; ij++)
-                    {
-                        IPointCollection pntColIn = new RingClass();
+                    //for (int ij = 0; ij < poly.InterRings.Count; ij++)
+                    //{
+                    //    IPointCollection pntColIn = new RingClass();
 
-                        List<PointCoord> listVertrix = poly.InterRings[ij].Vertries;
-                        for (int j = 0; j < listVertrix.Count; j++)
-                        {
-                            IPoint pnt = new PointClass();
-                            pnt.X = listVertrix[j].X;
-                            pnt.Y = listVertrix[j].Y;
+                    //    List<PointCoord> listVertrix = poly.InterRings[ij].Vertries;
+                    //    for (int j = 0; j < listVertrix.Count; j++)
+                    //    {
+                    //        IPoint pnt = new PointClass();
+                    //        pnt.X = listVertrix[j].X;
+                    //        pnt.Y = listVertrix[j].Y;
 
-                            pntColIn.AddPoint(pnt);
-                        }
+                    //        pntColIn.AddPoint(pnt);
+                    //    }
 
-                        pntColIn.AddPoint(pntColIn.get_Point(0));
-                        IRing inerRing = pntColIn as IRing;
-                        geomCol.AddGeometry(inerRing);
-                    }
+                    //    pntColIn.AddPoint(pntColIn.get_Point(0));
+                    //    IRing inerRing = pntColIn as IRing;
+                    //    geomCol.AddGeometry(inerRing);
+                    //}
 
                     polygonBuffer.Shape = polygon;
                     polygonBuffer.set_Value(indexLine, poly.Value);

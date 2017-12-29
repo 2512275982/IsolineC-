@@ -55,10 +55,14 @@ namespace DrawLineInArcGIS
                 EagleCls eagle = new EagleCls(student4);
                 string isoLinesStr = null;
                 string isoBandsStr = eagle.calculator_PM25(out isoLinesStr);
-                using (StreamWriter sw = new StreamWriter(@"C:\Users\admin\Desktop\test\isoLines.txt", false, Encoding.Default))
-                {
-                    sw.Write(isoLinesStr);
-                } using (StreamWriter sw = new StreamWriter(@"C:\Users\admin\Desktop\test\isoBands.txt", false, Encoding.Default))
+
+                isoBandsStr = isoBandsStr.Replace("\"X\":", "");
+                isoBandsStr = isoBandsStr.Replace("\"Y\":", "");
+                //using (StreamWriter sw = new StreamWriter(@"C:\Users\admin\Desktop\test\isoLines.txt", false, Encoding.Default))
+                //{
+                //    sw.Write(isoLinesStr);
+                //} 
+                using (StreamWriter sw = new StreamWriter(@"C:\Users\admin\Desktop\test\isoBands.txt", false, Encoding.Default))
                 {
                     sw.Write(isoBandsStr);
                 }

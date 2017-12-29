@@ -479,24 +479,39 @@ namespace Hykj.GISModule.Isobands
             }
 
             List<IsoPolygonInfo> listIsoPolys = new List<IsoPolygonInfo>();
+
+            List<IsoRing> listInterRings = new List<IsoRing>();
+
 			IsoPolygonInfo isoPolygon;
 			bool needAdd = false;
 			for(int i = 0;i<listIsoRings.Count;i++){  //循环遍历每一个多边形，找到直接子多边形
                 bool valueFlag = listIsoRings[i].ValueFlag;
 				double ringValue = listIsoRings[i].Value;
-				isoPolygon = new IsoPolygonInfo(listIsoRings[i].IsoRing);
+                isoPolygon = new IsoPolygonInfo(listIsoRings[i].ID, listIsoRings[i].IsoRing);
 				for(int index = i+1;index<listIsoRings.Count;index++){
 					PointCoord pnt = listIsoRings[index].IsoRing.Vertries[1];  //不用第一个点，因为第一个点可能在边界上，比较特殊
 					if(listIsoRings[i].IsoRing.JudgePntInRing(pnt)){ //判断多边形是否是目标多边形的子多边形
 						needAdd = true;
-						for(int j = 0;j < isoPolygon.InterRings.Count;j++){
-							if(isoPolygon.InterRings[j].JudgePntInRing(pnt)){
-								needAdd = false;
-								break;
-							}
-						}
+                        //for(int j = 0;j < isoPolygon.InterRings.Count;j++){
+                        //    if(isoPolygon.InterRings[j].JudgePntInRing(pnt)){
+                        //        needAdd = false;
+                        //        break;
+                        //    }
+                        //}
+
+                        for (int j = 0; j < listInterRings.Count; j++)
+                        {
+                            if (listInterRings[j].JudgePntInRing(pnt))
+                            {
+                                needAdd = false;
+                                break;
+                            }
+                        }
+
 						if(needAdd){
-							isoPolygon.AddInterRing(listIsoRings[index].IsoRing);
+                            //isoPolygon.AddInterRing(listIsoRings[index].IsoRing);
+                            isoPolygon.AddInterRingId(listIsoRings[index].ID);
+                            listInterRings.Add(listIsoRings[index].IsoRing);
                             if (valueFlag)
 							{
 								listIsoRings[index].SetParentValue(ringValue);
@@ -517,16 +532,30 @@ namespace Hykj.GISModule.Isobands
 						}
 					}
 				}
-				if(isoPolygon.InterRings.Count == 0 || isoPolygon.ValueType == -1){
-					if(ringValue>listIsoRings[i].ParentValue){
+                //if(isoPolygon.InterRings.Count == 0 || isoPolygon.ValueType == -1){
+                //    if(ringValue>listIsoRings[i].ParentValue){
+                //        //isoPolygon.MinValue = ringValue;
+                //        isoPolygon.SetValue(ringValue, false);  //赋值最小值
+                //    }else{
+                //        //isoPolygon.MaxValue = ringValue;
+                //        isoPolygon.SetValue(ringValue, true);  //赋值最大值
+                //    }
+
+                //}
+                if (listInterRings.Count == 0 || isoPolygon.ValueType == -1)
+                {
+                    if (ringValue > listIsoRings[i].ParentValue)
+                    {
                         //isoPolygon.MinValue = ringValue;
                         isoPolygon.SetValue(ringValue, false);  //赋值最小值
-					}else{
+                    }
+                    else
+                    {
                         //isoPolygon.MaxValue = ringValue;
                         isoPolygon.SetValue(ringValue, true);  //赋值最大值
-					}
-					
-				}
+                    }
+
+                }
 				listIsoPolys.Add(isoPolygon);
 			}
 			return listIsoPolys;
@@ -552,7 +581,6 @@ namespace Hykj.GISModule.Isobands
                     tempLine.Label = GetLabelInfo(tempLine);
                     tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
                     tempLine.ListVertrix = SimplyPnts(tempLine.ListVertrix);
-                    //tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
                     if (tempLine.ListVertrix.Count >= 3)
                     {
                         listIsolines.Add(tempLine);
@@ -570,8 +598,8 @@ namespace Hykj.GISModule.Isobands
             {
                 PointCoord pnt = listVertriex[i];
 
-                double xNew = Math.Round(pnt.X, 8);
-                double yNew = Math.Round(pnt.Y, 8);
+                double xNew = Math.Round(pnt.X, 7);
+                double yNew = Math.Round(pnt.Y, 7);
 
                 if (i > 0)
                 {
@@ -580,7 +608,7 @@ namespace Hykj.GISModule.Isobands
                         continue;
                     }
                 }
-                PointCoord pntNew = new PointCoord(Math.Round(pnt.X, 8), Math.Round(pnt.Y, 8));
+                PointCoord pntNew = new PointCoord(Math.Round(pnt.X, 7), Math.Round(pnt.Y, 7));
                 listResult.Add(pntNew);
                 xLast = xNew;
                 yLast = yNew;

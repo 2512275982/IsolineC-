@@ -16,6 +16,14 @@ namespace Hykj.GISModule
     {
         #region 属性
 
+        private string id;
+
+        public string ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
         //当前等值线外环值，用于计算等值线渲染颜色
         private double value;
         public double Value
@@ -52,12 +60,20 @@ namespace Hykj.GISModule
             set { outerRing = value; }
         }
 
-        private List<IsoRing> interRings;
-        public List<IsoRing> InterRings
+        private List<string> interRingsID;
+
+        public List<string> InterRingsID
         {
-            get { return interRings; }
-            set { interRings = value; }
+            get { return interRingsID; }
+            set { interRingsID = value; }
         }
+
+        //private List<IsoRing> interRings;
+        //public List<IsoRing> InterRings
+        //{
+        //    get { return interRings; }
+        //    set { interRings = value; }
+        //}
         private string polygonColor;
 
         public string PolygonColor
@@ -68,10 +84,12 @@ namespace Hykj.GISModule
         #endregion
 
         #region 构造函数
-        public IsoPolygonInfo(IsoRing outerRing)
+        public IsoPolygonInfo(string id,IsoRing outerRing)
         {
             this.outerRing = outerRing;
-            this.interRings = new List<IsoRing>();
+            this.interRingsID = new List<string>();
+            //this.interRings = new List<IsoRing>();
+            this.id = id;
         }
         #endregion
 
@@ -79,9 +97,14 @@ namespace Hykj.GISModule
         /*
          * 添加内环多边形
          */
-        public void AddInterRing(IsoRing isoRing)
+        //public void AddInterRing(IsoRing isoRing)
+        //{
+        //    this.interRings.Add(isoRing);
+        //}
+
+        public void AddInterRingId(string ringId)
         {
-            this.interRings.Add(isoRing);
+            this.interRingsID.Add(ringId);
         }
 
         public void SetValue(double value,bool isMax)
