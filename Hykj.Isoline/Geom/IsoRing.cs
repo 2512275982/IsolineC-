@@ -14,28 +14,56 @@ namespace Hykj.GISModule
     /// </summary>
     public class IsoRing
     {
+        private IsoLineInfo lineInfo;
+        public IsoLineInfo LineInfo
+        {
+            get { return lineInfo; }
+            set { lineInfo = value; }
+        }
+
         private List<PointCoord> vertries;
 
-        public List<PointCoord> Vertries
+        private List<PointCoord> listNodes = new List<PointCoord>();
+
+        public List<PointCoord> BoundNodes
         {
-            get { return vertries; }
-            set { vertries = value; }
+            get { return listNodes; }
         }
+
+        //public List<PointCoord> Vertries
+        //{
+        //    get { return vertries; }
+        //    set { vertries = value; }
+        //}
         public IsoRing(List<PointCoord> vertries)
         {
             this.vertries = new List<PointCoord>();
             this.vertries.AddRange(vertries);
+            this.listNodes.AddRange(vertries);
         }
 
-        public void PushPoint(PointCoord pnt)
+        public IsoRing(IsoLineInfo isoLineInfo)
         {
+            this.lineInfo = isoLineInfo;
+            this.vertries = new List<PointCoord>();
+            this.vertries = isoLineInfo.ListVertrix;
+        }
+
+        public void AddNode(PointCoord pnt)
+        {
+            this.listNodes.Add(pnt);
             this.vertries.Add(pnt);
         }
-        //在多边形的开头加上一个点
-        public void UnshiftPoint(PointCoord pnt)
-        {
-            this.vertries.Insert(0, pnt);
-        }
+
+        //public void PushPoint(PointCoord pnt)
+        //{
+        //    this.vertries.Add(pnt);
+        //}
+        ////在多边形的开头加上一个点
+        //public void UnshiftPoint(PointCoord pnt)
+        //{
+        //    this.vertries.Insert(0, pnt);
+        //}
         public bool JudgePntInRing(PointCoord pnt){
             double x = pnt.X;
             double y = pnt.Y;
@@ -56,6 +84,7 @@ namespace Hykj.GISModule
         /// <returns></returns>
         private bool CalPntInRing(double x,double y)
         {
+            //List<PointCoord> vertries = this.lineInfo.ListVertrix;
             int count = this.vertries.Count;
             if (count < 3)
             {

@@ -156,14 +156,15 @@ namespace Hykj.GISModule.Isobands
                     {
                         case "33":   //第2类
                             ringId = "02" + listClass2.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             //以线的起始点判断是否包含关系，替换为以下判断是否包含的方法，更好理解
                             for (j = 0; j < listClass2.Count; j++)
                             {
                                 ringCompare = listClass2[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 { //将大的放在前面
                                     listClass2.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);  
                                     needAdd = false;
@@ -177,13 +178,14 @@ namespace Hykj.GISModule.Isobands
                             break;
                         case "11":  //第3类
                             ringId = "03" + listClass3.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass3.Count; j++)
                             {
                                 ringCompare = listClass3[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass3.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -197,13 +199,14 @@ namespace Hykj.GISModule.Isobands
                             break;
                         case "44": //第4类
                             ringId = "04" + listClass4.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass4.Count; j++)
                             {
                                 ringCompare = listClass4[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass4.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -217,13 +220,14 @@ namespace Hykj.GISModule.Isobands
                             break;
                         case "22":  //第5类
                             ringId = "05" + listClass5.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass5.Count; j++)
                             {
                                 ringCompare = listClass5[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass5.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -238,14 +242,16 @@ namespace Hykj.GISModule.Isobands
                         case "12":  //第6类
                         case "21":
                             ringId = "06" + listClass6.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
-                            isoRing.PushPoint(new PointCoord(xMin, yMax));  //第6类需要加上一个角点（左上角）
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
+                            isoRing.AddNode(new PointCoord(xMin, yMax));
+                            //isoRing.PushPoint(new PointCoord(xMin, yMax));  //第6类需要加上一个角点（左上角）
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass6.Count; j++)
                             {
                                 ringCompare = listClass6[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass6.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -260,14 +266,16 @@ namespace Hykj.GISModule.Isobands
                         case "14":  //第7类
                         case "41":
                             ringId = "07" + listClass7.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
-                            isoRing.PushPoint(new PointCoord(xMin, yMin));   //第7类需要加上一个角点（左下角）
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
+                            isoRing.AddNode(new PointCoord(xMin, yMin));
+                            //isoRing.PushPoint(new PointCoord(xMin, yMin));   //第7类需要加上一个角点（左下角）
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass7.Count; j++)
                             {
                                 ringCompare = listClass7[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass7.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -282,14 +290,16 @@ namespace Hykj.GISModule.Isobands
                         case "34":  //第8类
                         case "43":
                             ringId = "08" + listClass8.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
-                            isoRing.PushPoint(new PointCoord(xMax, yMin));   //第8类需要加上一个角点（右下角）
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
+                            isoRing.AddNode(new PointCoord(xMax, yMin));
+                            //isoRing.PushPoint(new PointCoord(xMax, yMin));   //第8类需要加上一个角点（右下角）
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass8.Count; j++)
                             {
                                 ringCompare = listClass8[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass8.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -304,14 +314,16 @@ namespace Hykj.GISModule.Isobands
                         case "23":   //第9类
                         case "32":
                             ringId = "09" + listClass9.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
-                            isoRing.PushPoint(new PointCoord(xMax, yMax));   //第9类需要加上一个角点（右上角）
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
+                            isoRing.AddNode(new PointCoord(xMax, yMax));
+                            //isoRing.PushPoint(new PointCoord(xMax, yMax));   //第9类需要加上一个角点（右上角）
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass9.Count; j++)
                             {
                                 ringCompare = listClass9[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass9.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -326,23 +338,28 @@ namespace Hykj.GISModule.Isobands
                         case "13":  //第10类
                         case "31":
                             ringId = "10" + listClass10.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
                             if (Math.Abs(line.ToPoint.PntCoord.X - xMin) < 0.00000000001)
                             {  //第10类，差两个点，需要考虑添加的顺序
-                                isoRing.PushPoint(new PointCoord(xMin, yMin));
-                                isoRing.PushPoint(new PointCoord(xMax, yMin));
+                                isoRing.AddNode(new PointCoord(xMin, yMin));
+                                isoRing.AddNode(new PointCoord(xMax, yMin));
+                                //isoRing.PushPoint(new PointCoord(xMin, yMin));
+                                //isoRing.PushPoint(new PointCoord(xMax, yMin));
                             }
                             else
                             {
-                                isoRing.PushPoint(new PointCoord(xMax, yMin));
-                                isoRing.PushPoint(new PointCoord(xMin, yMin));
+                                isoRing.AddNode(new PointCoord(xMax, yMin));
+                                isoRing.AddNode(new PointCoord(xMin, yMin));
+                                //isoRing.PushPoint(new PointCoord(xMax, yMin));
+                                //isoRing.PushPoint(new PointCoord(xMin, yMin));
                             }
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass10.Count; j++)
                             {
                                 ringCompare = listClass10[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass10.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -357,23 +374,28 @@ namespace Hykj.GISModule.Isobands
                         case "24":  //第11类
                         case "42":
                             ringId = "11" + listClass11.Count.ToString();
-                            isoRing = new IsoRing(line.ListVertrix);
+                            //isoRing = new IsoRing(line.ListVertrix);
+                            isoRing = new IsoRing(line);
                             if (Math.Abs(line.ToPoint.PntCoord.Y - yMin) < 0.00000000001)
                             {  //第11类，差两个点，需要考虑添加的顺序   GetLineEnd()
-                                isoRing.PushPoint(new PointCoord(xMin, yMin));
-                                isoRing.PushPoint(new PointCoord(xMin, yMax));
+                                //isoRing.PushPoint(new PointCoord(xMin, yMin));
+                                //isoRing.PushPoint(new PointCoord(xMin, yMax));
+                                isoRing.AddNode(new PointCoord(xMin, yMin));
+                                isoRing.AddNode(new PointCoord(xMin, yMax));
                             }
                             else
                             {
-                                isoRing.PushPoint(new PointCoord(xMin, yMax));
-                                isoRing.PushPoint(new PointCoord(xMin, yMin));
+                                isoRing.AddNode(new PointCoord(xMin, yMax));
+                                isoRing.AddNode(new PointCoord(xMin, yMin));
+                                //isoRing.PushPoint(new PointCoord(xMin, yMax));
+                                //isoRing.PushPoint(new PointCoord(xMin, yMin));
                             }
                             isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                             for (j = 0; j < listClass11.Count; j++)
                             {
                                 ringCompare = listClass11[j];
-                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[1]))
+                                if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[1]))
                                 {
                                     listClass11.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                                     needAdd = false;
@@ -390,13 +412,14 @@ namespace Hykj.GISModule.Isobands
                 else
                 {   //闭合型，反向遍历，第1类
                     ringId = "01" + listClass1.Count.ToString();
-                    isoRing = new IsoRing(line.ListVertrix);
+                    //isoRing = new IsoRing(line.ListVertrix);
+                    isoRing = new IsoRing(line);
                     isoRingInfo = new IsoRingInfo(ringId, isoRing, line.LineValue);
 
                     for (int j = 0; j < listClass1.Count; j++)
                     {
                         ringCompare = listClass1[j];
-                        if (isoRing.JudgePntInRing(ringCompare.IsoRing.Vertries[0]))
+                        if (isoRing.JudgePntInRing(ringCompare.IsoRing.LineInfo.ListVertrix[0]))
                         {
                             listClass1.Insert(j, isoRingInfo);//.splice(j,0,isoRingInfo);
                             needAdd = false;
@@ -489,7 +512,7 @@ namespace Hykj.GISModule.Isobands
 				double ringValue = listIsoRings[i].Value;
                 isoPolygon = new IsoPolygonInfo(listIsoRings[i].ID, listIsoRings[i].IsoRing);
 				for(int index = i+1;index<listIsoRings.Count;index++){
-					PointCoord pnt = listIsoRings[index].IsoRing.Vertries[1];  //不用第一个点，因为第一个点可能在边界上，比较特殊
+					PointCoord pnt = listIsoRings[index].IsoRing.LineInfo.ListVertrix[1];  //不用第一个点，因为第一个点可能在边界上，比较特殊
 					if(listIsoRings[i].IsoRing.JudgePntInRing(pnt)){ //判断多边形是否是目标多边形的子多边形
 						needAdd = true;
                         //for(int j = 0;j < isoPolygon.InterRings.Count;j++){
@@ -517,11 +540,9 @@ namespace Hykj.GISModule.Isobands
 								listIsoRings[index].SetParentValue(ringValue);
 								if(ringValue > listIsoRings[index].Value)
 								{
-                                    //isoPolygon.MaxValue = ringValue;
                                     isoPolygon.SetValue(ringValue, true);  //赋值最大值
 								}
 								else if(ringValue < listIsoRings[index].Value){
-                                    //isoPolygon.MinValue = ringValue;
                                     isoPolygon.SetValue(ringValue, false);  //赋值最小值
 								}
 							}
@@ -579,7 +600,7 @@ namespace Hykj.GISModule.Isobands
                 {
                     IsoLineInfo tempLine = tempIsolines[j];
                     tempLine.Label = GetLabelInfo(tempLine);
-                    tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
+                    //tempLine.ListVertrix = LineSmooth.BsLine(tempLine.ListVertrix, 10);
                     tempLine.ListVertrix = SimplyPnts(tempLine.ListVertrix);
                     if (tempLine.ListVertrix.Count >= 3)
                     {

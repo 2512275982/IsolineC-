@@ -272,14 +272,18 @@ namespace DrawLineInArcGIS
             GridIsoline gridIsoline = TestIsoline.ReadJsonFile();
             List<IsoPolygonInfo> listPolys = gridIsoline.IsoBands;
 
+            Dictionary<string, IsoPolygonInfo> dicPolys = new Dictionary<string, IsoPolygonInfo>();
+            foreach (IsoPolygonInfo poly in listPolys)
+            {
+                dicPolys.Add(poly.ID, poly);
+            }
+
             DrawLine(gridIsoline.Isolines);
 
             IMap map = this.axMapControl1.Map;
             ILayer polygonLayer = map.get_Layer(2);
             IFeatureLayer featPolyLayer = polygonLayer as IFeatureLayer;
             IFeatureClass featPolyClass = featPolyLayer.FeatureClass;
-
-            
 
             IFeatureDataset featDataset = featPolyClass.FeatureDataset;
             IWorkspace workspace = featDataset.Workspace;
@@ -314,38 +318,78 @@ namespace DrawLineInArcGIS
                     IGeometryCollection geomCol = polygon as IGeometryCollection;
 
                     IPointCollection pntColl = new RingClass();
-                    for (int j = 0; j < poly.OuterRing.Vertries.Count; j++)
+                    if (poly.OuterRing.LineInfo != null)
+                    {
+                        for (int j = 0; j < poly.OuterRing.LineInfo.ListVertrix.Count; j++)
+                        {
+                            IPoint pnt = new PointClass();
+                            pnt.X = poly.OuterRing.LineInfo.ListVertrix[j].X;
+                            pnt.Y = poly.OuterRing.LineInfo.ListVertrix[j].Y;
+
+                            pntColl.AddPoint(pnt);
+                        }
+                    }
+
+                    for (int j = 0; j < poly.OuterRing.BoundNodes.Count; j++)
                     {
                         IPoint pnt = new PointClass();
-                        pnt.X = poly.OuterRing.Vertries[j].X;
-                        pnt.Y = poly.OuterRing.Vertries[j].Y;
+                        pnt.X = poly.OuterRing.BoundNodes[j].X;
+                        pnt.Y = poly.OuterRing.BoundNodes[j].Y;
 
                         pntColl.AddPoint(pnt);
                     }
-                    pntColl.AddPoint(pntColl.get_Point(0));
+                        pntColl.AddPoint(pntColl.get_Point(0));
                     IRing outerRing = pntColl as IRing;
                     geomCol.AddGeometry(outerRing);
 
-                    //for (int ij = 0; ij < poly.InterRings.Count; ij++)
-                    //{
-                    //    IPointCollection pntColIn = new RingClass();
+                    for (int ij = 0; ij < poly.InterRingsID.Count; ij++)
+                    {
+                        IPointCollection pntColIn = new RingClass();
 
-                    //    List<PointCoord> listVertrix = poly.InterRings[ij].Vertries;
-                    //    for (int j = 0; j < listVertrix.Count; j++)
-                    //    {
-                    //        IPoint pnt = new PointClass();
-                    //        pnt.X = listVertrix[j].X;
-                    //        pnt.Y = listVertrix[j].Y;
+                        List<PointCoord> listVertrix = dicPolys[poly.InterRingsID[ij]].OuterRing.LineInfo.ListVertrix;
+                        for (int j = 0; j < listVertrix.Count; j++)
+                        {
+                            IPoint pnt = new PointClass();
+                            pnt.X = listVertrix[j].X;
+                            pnt.Y = listVertrix[j].Y;
 
-                    //        pntColIn.AddPoint(pnt);
-                    //    }
+                            pntColIn.AddPoint(pnt);
+                        }
 
-                    //    pntColIn.AddPoint(pntColIn.get_Point(0));
-                    //    IRing inerRing = pntColIn as IRing;
-                    //    geomCol.AddGeometry(inerRing);
-                    //}
+                        for (int j = 0; j < dicPolys[poly.InterRingsID[ij]].OuterRing.BoundNodes.Count; j++)
+                        {
+                            IPoint pnt = new PointClass();
+                            pnt.X = dicPolys[poly.InterRingsID[ij]].OuterRing.BoundNodes[j].X;
+                            pnt.Y = dicPolys[poly.InterRingsID[ij]].OuterRing.BoundNodes[j].Y;
 
-                    polygonBuffer.Shape = polygon;
+                            pntColl.AddPoint(pnt);
+                        }
+
+                        pntColIn.AddPoint(pntColIn.get_Point(0));
+                        IRing inerRing = pntColIn as IRing;
+                        geomCol.AddGeometry(inerRing);
+                    }
+
+                        //for (int ij = 0; ij < poly.InterRings.Count; ij++)
+                        //{
+                        //    IPointCollection pntColIn = new RingClass();
+
+                        //    List<PointCoord> listVertrix = poly.InterRings[ij].Vertries;
+                        //    for (int j = 0; j < listVertrix.Count; j++)
+                        //    {
+                        //        IPoint pnt = new PointClass();
+                        //        pnt.X = listVertrix[j].X;
+                        //        pnt.Y = listVertrix[j].Y;
+
+                        //        pntColIn.AddPoint(pnt);
+                        //    }
+
+                        //    pntColIn.AddPoint(pntColIn.get_Point(0));
+                        //    IRing inerRing = pntColIn as IRing;
+                        //    geomCol.AddGeometry(inerRing);
+                        //}
+
+                        polygonBuffer.Shape = polygon;
                     polygonBuffer.set_Value(indexLine, poly.Value);
                     //polygonBuffer.set_Value(indexMaxValue, poly.MaxValue);
                     //polygonBuffer.set_Value(indexMinValue, poly.MinValue);
