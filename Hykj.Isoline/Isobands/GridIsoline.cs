@@ -443,6 +443,14 @@ namespace Hykj.GISModule.Isobands
             isoRing = new IsoRing(outerEnvelop);
             isoRingInfo = new IsoRingInfo(ringId, isoRing);
 
+            int columnCount = gridInfo.PntGrid.GetLength(0) - 1;
+            int rowCount = gridInfo.PntGrid.GetLength(1) - 1;
+            double v1 = gridInfo.PntGrid[0, 0].Z;
+            double v2 = gridInfo.PntGrid[0, rowCount].Z;
+            double v3 = gridInfo.PntGrid[columnCount, 0].Z;
+            double v4 = gridInfo.PntGrid[columnCount, rowCount].Z;
+            isoRingInfo.Value = (v1 + v2 + v3 + v4) / 4;
+
             List<IsoRingInfo> listIsoRings = new List<IsoRingInfo>();
             listIsoRings.Add(isoRingInfo);
             listIsoRings.AddRange(listClass11);
@@ -508,6 +516,8 @@ namespace Hykj.GISModule.Isobands
 			IsoPolygonInfo isoPolygon;
 			bool needAdd = false;
 			for(int i = 0;i<listIsoRings.Count;i++){  //循环遍历每一个多边形，找到直接子多边形
+                listInterRings.Clear();
+
                 bool valueFlag = listIsoRings[i].ValueFlag;
 				double ringValue = listIsoRings[i].Value;
                 isoPolygon = new IsoPolygonInfo(listIsoRings[i].ID, listIsoRings[i].IsoRing);

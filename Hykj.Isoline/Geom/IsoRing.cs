@@ -46,7 +46,7 @@ namespace Hykj.GISModule
         {
             this.lineInfo = isoLineInfo;
             this.vertries = new List<PointCoord>();
-            this.vertries = isoLineInfo.ListVertrix;
+            this.vertries.AddRange(isoLineInfo.ListVertrix);
         }
 
         public void AddNode(PointCoord pnt)

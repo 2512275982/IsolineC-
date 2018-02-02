@@ -98,11 +98,11 @@ namespace Hykj.GISModule
 
             if (disX > disY)
             {
-                gridStep = (int)(disX / 5) + 1;
+                gridStep = (int)(disX / 50) + 1;  //50米进行插值
             }
             else
             {
-                gridStep = (int)(disY / 5) + 1;
+                gridStep = (int)(disY / 50) + 1;
             }
         }
 

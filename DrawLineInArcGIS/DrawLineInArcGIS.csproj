@@ -66,9 +66,6 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Version, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86" />
-    <Reference Include="Hykj.EagleClass">
-      <HintPath>C:\Users\admin\Desktop\test\Hykj.EagleClass.dll</HintPath>
-    </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -123,6 +120,10 @@
     <ProjectReference Include="..\Hykj.BaseMethods\Hykj.BaseMethods.csproj">
       <Project>{c789562b-263d-4b5d-8a19-f7122116e7ef}</Project>
       <Name>Hykj.BaseMethods</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hykj.EagleClass\Hykj.EagleClass.csproj">
+      <Project>{2c2fcc7d-5097-435b-b020-81c56d5a359c}</Project>
+      <Name>Hykj.EagleClass</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hykj.Isoline\Hykj.GISModule.csproj">
       <Project>{2e2fc908-efa1-4e48-b66b-463d9187a054}</Project>

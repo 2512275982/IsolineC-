@@ -113,7 +113,7 @@ namespace Hykj.EagleClass
             List<IsoLineInfo> listLines = null;
             List<IsoPolygonInfo> listPolys = calculatorIsoGrids(out listLines);
 
-                isoLineStr = JsonHelper.SerializeObject(listLines);
+            isoLineStr = JsonHelper.SerializeObject(listLines);
             return JsonHelper.SerializeObject(listPolys);
         }
         /// <summary>
@@ -177,7 +177,7 @@ namespace Hykj.EagleClass
         }
 
         /// <summary>
-        /// 获取数据对应的分割数组
+        /// 获取数据对应的分割数组，测试svn
         /// </summary>
         /// <returns></returns>
         private double[] GetSplitArray()
@@ -195,7 +195,7 @@ namespace Hykj.EagleClass
                 case EagleField.PM10:
                     return new double[] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260 };
                 case EagleField.SO2:
-                    return new double[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750 };
+                    return new double[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750 };  //15个值
                 default:
                     break;
             }
@@ -217,7 +217,7 @@ namespace Hykj.EagleClass
                     cols = new string[] { "#01fd04", "#1bfb04", "#33fd00", "#49fe04", "#5fff00", "#7afe00", "#95fc01", "#a9fe08", "#c2fd06", "#ddfd00", "#f3fe01", "#fbe300", "#fca700", "#fc6801", "#fb2909", "#f80006", "#d60004", "#ba0001", "#990001", "#770100", "#3a0000", "#000000" };
                     break;
                 case EagleField.SO2:
-                    cols = new string[] { "#00fe03", "#22fd02", "#47fe00", "#6bff01", "#8ffe00", "#bafd00", "#dbfe00", "#fffc00", "#ffa401", "#ff4703", "#f40100", "#cc0000", "#990001", "#580000", "#200506", "#000000" };
+                    cols = new string[] { "#00fe03", "#22fd02", "#47fe00", "#6bff01", "#8ffe00", "#bafd00", "#dbfe00", "#fffc00", "#ffa401", "#ff4703", "#f40100", "#cc0000", "#990001", "#580000", "#200506", "#000000" };  //16个值
                     break;
                 case EagleField.NO2:
                     cols = new string[] { "#01fe00", "#11fd02", "#29fb04", "#43f806", "#4efd03", "#63fb03", "#72fe02", "#89fd06", "#9afd08", "#abfe08", "#bffd07", "#d4fe00", "#e7fe04", "#f9fe03", "#fed900", "#fea50b", "#fe7700", "#fd4902", "#fe1701", "#ec0302", "#d60100", "#c70001", "#ab0000", "#900100", "#740200", "#450000", "#130000", "#000000" };
@@ -244,18 +244,23 @@ namespace Hykj.EagleClass
             double[] splitArrs = GetSplitArray();
             foreach (IsoPolygonInfo polygonInfo in listPolys)
             {
-                if (polygonInfo.ValueType == -1)
+                if (polygonInfo.Value < splitArrs[0])
                 {
-                    continue;
+                    polygonInfo.PolygonColor = cols[0];
+                }
+                else if (polygonInfo.Value > splitArrs[splitArrs.Length - 1])
+                {
+                    polygonInfo.PolygonColor = cols[cols.Length - 1];
                 }
                 else
                 {
-                    int index = Array.IndexOf(splitArrs, polygonInfo.Value);
-                    if (index == 0 || index == splitArrs.Length || index == -1)
+                    if (polygonInfo.ValueType == -1)
                     {
-                        //未确认下面写法是否正确
+                        continue;
                     }
                     else
+                    {
+                        int index = Array.IndexOf(splitArrs, polygonInfo.Value);
                         if (polygonInfo.ValueType == 1)//当前值为等值面的最小值
                         {
                             polygonInfo.PolygonColor = cols[index + 1];
@@ -265,6 +270,7 @@ namespace Hykj.EagleClass
                         {
                             polygonInfo.PolygonColor = cols[index];
                         }
+                    }
                 }
 
             }
